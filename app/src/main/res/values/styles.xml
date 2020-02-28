@@ -1,0 +1,50 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ScoreButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:tint">@color/colorPrimary</item>
+    </style>
+
+    <style name="PlusButtons" parent="ScoreButton">
+        <item name="android:src">@drawable/ic_plus</item>
+        <item name=
+            "android:contentDescription">Plus Button</item>
+    </style>
+
+    <style name="MinusButtons" parent="ScoreButton">
+        <item name="android:src">@drawable/ic_minus</item>
+        <item name="android:contentDescription">Minus Button</item>
+    </style>
+
+    <style name="CoffeeTitle" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="CoffeeNumber" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+</resources>
