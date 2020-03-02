@@ -1,92 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".ui.home.HomeFragment">
+    android:fillViewport="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".ui.home.HomeFragment">
 
-        <TextView
-            android:id="@+id/coffeeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/center"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="108dp"
-            style="@style/CoffeeTitle"
-            android:text="@string/coffee" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="334dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
-        <ImageView
-            android:id="@+id/coffeeCup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/center"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_local_cafe_black_24dp"
-            />
-
-        <TextView
-            android:id="@+id/coffeeNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/_0"
-            android:layout_marginEnd="46dp"
-            android:layout_marginBottom="-12dp"
-            android:layout_alignBottom="@id/center"
-            android:layout_toStartOf="@id/center"
-            style="@style/CoffeeNumber"/>
+            <TextView
+                android:id="@+id/coffeeTitle"
+                style="@style/CoffeeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/center"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="108dp"
+                android:text="@string/coffee" />
 
 
-        <View
-            android:id="@+id/center"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            />
+            <ImageView
+                android:id="@+id/coffeeCup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/center"
+                android:src="@drawable/ic_local_cafe_black_24dp" />
 
-        <TextView
-            android:id="@+id/cupHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
-            android:layout_marginTop="44dp"
-            android:layout_alignTop="@id/center"
-            android:layout_toStartOf="@id/center"
-            android:text="8 oz."/>
+            <TextView
+                android:id="@+id/coffeeNumber"
+                style="@style/CoffeeNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/center"
+                android:layout_marginEnd="46dp"
+                android:layout_marginBottom="-12dp"
+                android:layout_toStartOf="@id/center"
+                android:text="@string/_0" />
 
-        <ImageButton
-            android:id="@+id/increase"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:layout_alignBottom="@id/center"
-            android:layout_alignStart="@id/center"
-            android:layout_margin="16dp"
-            style="@style/PlusButtons"
-            android:onClick="increaseCount"
-           />
 
-        <ImageButton
-            android:id="@+id/decrease"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
-            android:layout_alignTop="@id/center"
-            android:layout_alignStart="@id/center"
-            android:layout_margin="16dp"
-            style="@style/MinusButtons"
-            android:onClick="decreaseCount"
-            tools:ignore="OnClick" />
-    </RelativeLayout>
+            <View
+                android:id="@+id/center"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/cupHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/center"
+                android:layout_marginTop="44dp"
+                android:layout_marginEnd="40dp"
+                android:layout_toStartOf="@id/center"
+                android:text="@string/_8_oz" />
+
+            <ImageButton
+                android:id="@+id/increase"
+                style="@style/PlusButtons"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_alignStart="@id/center"
+                android:layout_alignBottom="@id/center"
+                android:layout_margin="16dp"
+                android:onClick="increaseCount" />
+
+            <ImageButton
+                android:id="@+id/decrease"
+                style="@style/MinusButtons"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_alignStart="@id/center"
+                android:layout_alignTop="@id/center"
+                android:layout_margin="16dp"
+                android:onClick="decreaseCount"
+                tools:ignore="OnClick" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="301dp">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barchart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

@@ -27,6 +27,14 @@ import com.example.coffeetracker.R;
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+
 public class HomeFragment extends Fragment
 {
     private HomeViewModel homeViewModel;
@@ -45,6 +53,8 @@ public class HomeFragment extends Fragment
     //keeps track of coffee number
     private int num;
 
+    BarChart productivityChart;
+
     public static String numberExtra = "extra for coffee number";
 
     AlarmManager alarmManager;
@@ -59,6 +69,42 @@ public class HomeFragment extends Fragment
         mPlusButton = root.findViewById(R.id.increase);
         mMinusButton = root.findViewById(R.id.decrease);
         mCoffeeNumber = root.findViewById(R.id.coffeeNumber);
+
+        //Reference to chart
+        productivityChart = root.findViewById(R.id.barchart);
+
+
+        ArrayList NoOfEmp = new ArrayList();
+
+        NoOfEmp.add(new BarEntry(945f, 0));
+        NoOfEmp.add(new BarEntry(1040f, 1));
+        NoOfEmp.add(new BarEntry(1133f, 2));
+        NoOfEmp.add(new BarEntry(1240f, 3));
+        NoOfEmp.add(new BarEntry(1369f, 4));
+        NoOfEmp.add(new BarEntry(1487f, 5));
+        NoOfEmp.add(new BarEntry(1501f, 6));
+        NoOfEmp.add(new BarEntry(1645f, 7));
+        NoOfEmp.add(new BarEntry(1578f, 8));
+        NoOfEmp.add(new BarEntry(1695f, 9));
+
+        ArrayList year = new ArrayList();
+
+        year.add("2008");
+        year.add("2009");
+        year.add("2010");
+        year.add("2011");
+        year.add("2012");
+        year.add("2013");
+        year.add("2014");
+        year.add("2015");
+        year.add("2016");
+        year.add("2017");
+
+        BarDataSet bardataset = new BarDataSet(NoOfEmp, "No Of Employee");
+        productivityChart.animateY(5000);
+        BarData data = new BarData(bardataset);
+        bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        productivityChart.setData(data);
 
         //Creating the notification channel
         createNotificationChannel();
@@ -112,6 +158,7 @@ public class HomeFragment extends Fragment
                 {
                     num--;
                     mCoffeeNumber.setText(String.valueOf(num));
+                    initiateNotification();
                 }
             }
         });
