@@ -23,14 +23,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <Button
                 android:id="@+id/coffeeTitle"
-                style="@style/CoffeeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/center"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="108dp"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp"
+                android:background="@drawable/custom_title_button"
                 android:text="@string/coffee" />
 
 

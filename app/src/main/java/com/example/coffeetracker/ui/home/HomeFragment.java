@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,13 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HomeFragment extends Fragment
 {
@@ -53,6 +60,8 @@ public class HomeFragment extends Fragment
     //keeps track of coffee number
     private int num;
 
+    private TextView mDateTextView;
+
     BarChart productivityChart;
 
     public static String numberExtra = "extra for coffee number";
@@ -70,9 +79,15 @@ public class HomeFragment extends Fragment
         mMinusButton = root.findViewById(R.id.decrease);
         mCoffeeNumber = root.findViewById(R.id.coffeeNumber);
 
+        mDateTextView = root.findViewById(R.id.coffeeTitle);
+
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
+        String stringDate = date.format(formatter);
+        mDateTextView.setText(stringDate);
+
         //Reference to chart
         productivityChart = root.findViewById(R.id.barchart);
-
 
         ArrayList NoOfEmp = new ArrayList();
 
