@@ -5,13 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,9 +17,10 @@ import androidx.lifecycle.Observer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.coffeetracker.Coffee;
+import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -63,6 +61,9 @@ public class HomeFragment extends Fragment
     private TextView mDateTextView;
 
     BarChart productivityChart;
+
+    //ViewModel
+    private CoffeeViewModel mCoffeeViewModel;
 
     public static String numberExtra = "extra for coffee number";
 
@@ -139,6 +140,10 @@ public class HomeFragment extends Fragment
 
         mCoffeeNumber.setText(coffeeCount);
 
+        //Associating our ViewModel with our UI controller
+        //ViewModelProviders creates and manages ViewModels
+        mCoffeeViewModel = ViewModelProviders.of(this).get(CoffeeViewModel.class);
+
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
         {
             @Override
@@ -173,6 +178,8 @@ public class HomeFragment extends Fragment
                 {
                     num--;
                     mCoffeeNumber.setText(String.valueOf(num));
+                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num);
+                    mCoffeeViewModel.insert(coffee);
                     initiateNotification();
                 }
             }
