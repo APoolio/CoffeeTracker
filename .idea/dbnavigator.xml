@@ -75,6 +75,8 @@
           <database value="database" />
           <files>
             <file path="sqlite.db" schema="main" />
+            <file path="C:\Users\apoole13\Documents\AndroidStudio\DeviceExplorer\google-pixel_2-HT86B1A01195\data\data\com.example.coffeetracker\databases\coffee_database-shm" schema="" />
+            <file path="C:\Users\apoole13\Documents\AndroidStudio\DeviceExplorer\google-pixel_2-HT86B1A01195\data\data\com.example.coffeetracker\databases\coffee_database-wal" schema="" />
             <file path="C:\Users\apoole13\Documents\AndroidStudio\DeviceExplorer\google-pixel_2-HT86B1A01195\data\data\com.example.coffeetracker\databases\coffee_database" schema="" />
           </files>
           <type value="NONE" />

@@ -1,5 +1,7 @@
 package com.example.coffeetracker;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -20,13 +22,17 @@ public class Coffee
 
     public Coffee(@NonNull String date, int count)
     {
+        Log.d("date2", date);
+        Log.d("date2", Integer.toString(count));
         this.mCount = count;
         this.mDate = date;
     }
 
-    public String getDate() {return this.mDate; }
+    public String getDate() { return this.mDate; }
 
     public int getCount() { return this.mCount; }
+
+    public void setCount (int count) { this.mCount = count; }
 
     public void setDate (String date) { this.mDate = date; }
 }

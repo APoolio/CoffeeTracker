@@ -24,6 +24,10 @@ public class CoffeeRepository
         new insertAsyncTask(mCoffeeDao).execute(coffee);
     }
 
+    public void updateCount(Coffee coffee)
+    {
+       new updateCountAsyncTask(mCoffeeDao).execute(coffee);
+    }
 
     private static class insertAsyncTask extends AsyncTask<Coffee, Void, Void>
     {
@@ -37,6 +41,23 @@ public class CoffeeRepository
         protected Void doInBackground(final Coffee... params)
         {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+
+    private static class updateCountAsyncTask extends AsyncTask<Coffee, Void, Void>
+    {
+        private CoffeeDao mAsyncTaskDao;
+
+        //Constructor for the AsyncTask. Passed in a com.example.roomwordssample.WordDao to call the insert method
+        updateCountAsyncTask(CoffeeDao dao) { mAsyncTaskDao = dao;}
+
+        //Calling insert on another thread
+        @Override
+        protected Void doInBackground(final Coffee... params)
+        {
+            mAsyncTaskDao.updateCount(params[0].getDate(), params[0].getCount());
             return null;
         }
     }

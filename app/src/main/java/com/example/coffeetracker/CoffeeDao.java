@@ -11,7 +11,9 @@ import androidx.room.Update;
 @Dao
 public interface CoffeeDao
 {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Coffee coffee);
 
+    @Query("UPDATE coffee_table SET coffeeCount = :count WHERE date = :date")
+    int updateCount(String date, int count);
 }

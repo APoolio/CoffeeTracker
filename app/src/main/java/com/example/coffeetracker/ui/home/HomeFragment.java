@@ -165,6 +165,12 @@ public class HomeFragment extends Fragment
             public void onClick(View v) {
                 num++;
                 mCoffeeNumber.setText(String.valueOf(num));
+                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num);
+                if(num != 1){
+                    mCoffeeViewModel.updateCount(coffee);
+                }
+                else mCoffeeViewModel.insert(coffee);
+
                 initiateNotification();
             }
         });
@@ -179,7 +185,11 @@ public class HomeFragment extends Fragment
                     num--;
                     mCoffeeNumber.setText(String.valueOf(num));
                     Coffee coffee = new Coffee(mDateTextView.getText().toString(), num);
-                    mCoffeeViewModel.insert(coffee);
+                    if(num != 1){
+                        mCoffeeViewModel.updateCount(coffee);
+                    }
+                    else mCoffeeViewModel.insert(coffee);
+
                     initiateNotification();
                 }
             }
