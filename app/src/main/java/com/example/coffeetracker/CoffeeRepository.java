@@ -57,7 +57,7 @@ public class CoffeeRepository
         @Override
         protected Void doInBackground(final Coffee... params)
         {
-            mAsyncTaskDao.updateCount(params[0].getDate(), params[0].getCount());
+            mAsyncTaskDao.updateCount(params[0].getDate(), params[0].getCount(), params[0].getTimes());
             return null;
         }
     }

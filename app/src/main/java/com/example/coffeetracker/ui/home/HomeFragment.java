@@ -6,39 +6,39 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.lifecycle.Observer;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
+import com.example.coffeetracker.CoffeeDao;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
-
-import static android.content.Context.ALARM_SERVICE;
-import static android.content.Context.NOTIFICATION_SERVICE;
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class HomeFragment extends Fragment
 {
@@ -65,9 +65,13 @@ public class HomeFragment extends Fragment
     //ViewModel
     private CoffeeViewModel mCoffeeViewModel;
 
+    //For notification intent
     public static String numberExtra = "extra for coffee number";
 
+    //Used for notification alarm
     AlarmManager alarmManager;
+
+    CoffeeDao mDao;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -156,20 +160,36 @@ public class HomeFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
+        final ArrayList<String> times = new ArrayList<>();
 
         // bind the views here.
-        mPlusButton.setOnClickListener(new View.OnClickListener() {
+        mPlusButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 num++;
                 mCoffeeNumber.setText(String.valueOf(num));
-                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num);
-                if(num != 1){
-                    mCoffeeViewModel.updateCount(coffee);
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                Date date = new Date();
+                Log.d("Addition time", formatter.format(date));
+                if(num == 1)
+                {
+                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
+                    coffee.getTimes().add(formatter.format(date));
+                    mCoffeeViewModel.insert(coffee);
                 }
-                else mCoffeeViewModel.insert(coffee);
+                else
+                {
+
+                }
+
+                    //mCoffeeViewModel.updateCount(coffee);
+
 
                 initiateNotification();
             }
@@ -177,15 +197,18 @@ public class HomeFragment extends Fragment
 
 
         // bind the views here.
-        mMinusButton.setOnClickListener(new View.OnClickListener() {
+        mMinusButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                if(num != 0)
+            public void onClick(View v)
+            {
+                if (num != 0)
                 {
                     num--;
                     mCoffeeNumber.setText(String.valueOf(num));
-                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num);
-                    if(num != 1){
+                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
+                    if (num != 1)
+                    {
                         mCoffeeViewModel.updateCount(coffee);
                     }
                     else mCoffeeViewModel.insert(coffee);
@@ -209,13 +232,14 @@ public class HomeFragment extends Fragment
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(getActivity(), NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //If the alarm does not exist then create it
-        if(!alarmUp) alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, interval, notifyPendingIntent);
+        if (!alarmUp)
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, interval, notifyPendingIntent);
 
-        //If the user adds another cup of coffee then reset the timer
+            //If the user adds another cup of coffee then reset the timer
         else
         {
             //Cancel the alarm
-            if(alarmManager != null)
+            if (alarmManager != null)
                 alarmManager.cancel(notifyPendingIntent);
 
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, interval, notifyPendingIntent);

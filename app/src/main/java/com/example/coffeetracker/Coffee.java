@@ -8,6 +8,9 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //Ha! Coffee Table
 @Entity(tableName = "coffee_table")
 public class Coffee
@@ -20,17 +23,24 @@ public class Coffee
     @ColumnInfo(name = "coffeeCount")
     private int mCount;
 
-    public Coffee(@NonNull String date, int count)
+    @ColumnInfo(name = "timeList")
+    private ArrayList<String> mTimes = new ArrayList<>();
+
+
+    public Coffee(@NonNull String date, int count, ArrayList<String> times)
     {
         Log.d("date2", date);
         Log.d("date2", Integer.toString(count));
         this.mCount = count;
         this.mDate = date;
+        this.mTimes.addAll(times);
     }
 
-    public String getDate() { return this.mDate; }
+    public String getDate() { return mDate; }
 
-    public int getCount() { return this.mCount; }
+    public int getCount() { return mCount; }
+
+    public ArrayList<String> getTimes() { return mTimes; }
 
     public void setCount (int count) { this.mCount = count; }
 
