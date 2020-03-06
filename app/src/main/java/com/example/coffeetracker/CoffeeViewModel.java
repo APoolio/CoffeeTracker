@@ -4,14 +4,16 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
-import com.example.coffeetracker.Coffee;
-import com.example.coffeetracker.CoffeeRepository;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CoffeeViewModel extends AndroidViewModel
 {
     //Reference to the repo
     private CoffeeRepository mRepository;
+    private LiveData<List<Coffee>> mCoffee;
 
     public CoffeeViewModel(Application application)
     {
@@ -19,6 +21,7 @@ public class CoffeeViewModel extends AndroidViewModel
 
         //Getting a list of all words from the WordRepo
         mRepository = new CoffeeRepository(application);
+        mCoffee = mRepository.getAllCoffee();
     }
 
     //Inserting a word into the repo which inserts it into the db
@@ -26,4 +29,6 @@ public class CoffeeViewModel extends AndroidViewModel
     public void insert(Coffee coffee) { mRepository.insert(coffee); }
 
     public void updateCount(Coffee coffee) { mRepository.updateCount(coffee); }
+
+    public LiveData<List<Coffee>> getAllCoffee() { return mCoffee; }
 }

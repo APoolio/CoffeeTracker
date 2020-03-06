@@ -9,6 +9,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Dao
 public interface CoffeeDao
@@ -18,4 +19,7 @@ public interface CoffeeDao
 
     @Query("UPDATE coffee_table SET coffeeCount = :count AND timeList = :times WHERE date = :date")
     int updateCount(String date, int count, ArrayList<String> times);
+
+    @Query("SELECT * FROM coffee_table")
+    LiveData<List<Coffee>> getAllCoffee();
 }

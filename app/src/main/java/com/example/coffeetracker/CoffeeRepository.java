@@ -3,18 +3,20 @@ package com.example.coffeetracker;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.example.coffeetracker.Coffee;
-import com.example.coffeetracker.CoffeeDao;
-import com.example.coffeetracker.CoffeeRoomDatabase;
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
 
 public class CoffeeRepository
 {
     private CoffeeDao mCoffeeDao;
+    private LiveData<List<Coffee>> mAllCoffee;
 
     CoffeeRepository(Application application)
     {
         CoffeeRoomDatabase db = CoffeeRoomDatabase.getDatabase(application);
         mCoffeeDao = db.coffeeDao();
+        mAllCoffee = mCoffeeDao.getAllCoffee();
     }
 
     //Wrapper for the insert method called from the WordViewModel which uses the WordDao
@@ -26,7 +28,12 @@ public class CoffeeRepository
 
     public void updateCount(Coffee coffee)
     {
-       new updateCountAsyncTask(mCoffeeDao).execute(coffee);
+        new updateCountAsyncTask(mCoffeeDao).execute(coffee);
+    }
+
+    LiveData<List<Coffee>> getAllCoffee()
+    {
+        return mAllCoffee;
     }
 
     private static class insertAsyncTask extends AsyncTask<Coffee, Void, Void>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -177,21 +178,31 @@ public class HomeFragment extends Fragment
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 Date date = new Date();
                 Log.d("Addition time", formatter.format(date));
+                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
                 if(num == 1)
                 {
-                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
                     coffee.getTimes().add(formatter.format(date));
                     mCoffeeViewModel.insert(coffee);
                 }
                 else
                 {
-
+                    mCoffeeViewModel.updateCount(coffee);
+                   // Log.d("Test", coffeeList.get(0).getDate());
                 }
 
-                    //mCoffeeViewModel.updateCount(coffee);
+            }
+        });
 
+        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>() {
+            @Override
+            public void onChanged(List<Coffee> coffees)
+            {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                Date date = new Date();
+                Log.d("Addition time", formatter.format(date));
 
-                initiateNotification();
+                Log.d("CoffeeTimeList", coffees.get(0).getTimes().get(0));
+                coffees.get(0).getTimes().add(formatter.format(date));
             }
         });
 
