@@ -17,12 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
-import com.example.coffeetracker.CoffeeDao;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -72,7 +70,7 @@ public class HomeFragment extends Fragment
     //Used for notification alarm
     AlarmManager alarmManager;
 
-    CoffeeDao mDao;
+    Coffee retrievedCoffee = null;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -177,35 +175,43 @@ public class HomeFragment extends Fragment
 
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 Date date = new Date();
-                Log.d("Addition time", formatter.format(date));
                 Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
-                if(num == 1)
+                if (num == 1)
                 {
                     coffee.getTimes().add(formatter.format(date));
                     mCoffeeViewModel.insert(coffee);
                 }
                 else
                 {
-                    mCoffeeViewModel.updateCount(coffee);
-                   // Log.d("Test", coffeeList.get(0).getDate());
+                    if (retrievedCoffee != null)
+                    {
+                        ArrayList<String> retrievedTimes = retrievedCoffee.getTimes();
+                        retrievedTimes.add(formatter.format(date));
+                        Log.d("retrievedTimesCoffeeDate", retrievedCoffee.getDate());
+                        Log.d("retrievedTimesCoffeeCount", Integer.toString(retrievedCoffee.getCount()));
+                        Log.d("retrievedTimesCoffeeTime0", retrievedCoffee.getTimes().get(0));
+                        mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes));
+                    }
                 }
 
             }
         });
 
-        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>() {
+        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
+        {
             @Override
             public void onChanged(List<Coffee> coffees)
             {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                Date date = new Date();
-                Log.d("Addition time", formatter.format(date));
-
-                Log.d("CoffeeTimeList", coffees.get(0).getTimes().get(0));
-                coffees.get(0).getTimes().add(formatter.format(date));
+                //Non-efficient way to get the Coffee object but it will work for now
+                for (int i = 0; i < coffees.size(); i++)
+                {
+                    if (coffees.get(i).getDate().equals(mDateTextView.getText().toString()))
+                    {
+                        retrievedCoffee = coffees.get(i);
+                    }
+                }
             }
         });
-
 
         // bind the views here.
         mMinusButton.setOnClickListener(new View.OnClickListener()

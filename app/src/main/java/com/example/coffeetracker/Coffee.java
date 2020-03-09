@@ -29,8 +29,6 @@ public class Coffee
 
     public Coffee(@NonNull String date, int count, ArrayList<String> times)
     {
-        Log.d("date2", date);
-        Log.d("date2", Integer.toString(count));
         this.mCount = count;
         this.mDate = date;
         this.mTimes.addAll(times);
