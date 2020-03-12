@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -95,16 +96,16 @@ public class HomeFragment extends Fragment
 
         ArrayList NoOfEmp = new ArrayList();
 
-        NoOfEmp.add(new BarEntry(945f, 0));
-        NoOfEmp.add(new BarEntry(1040f, 1));
-        NoOfEmp.add(new BarEntry(1133f, 2));
-        NoOfEmp.add(new BarEntry(1240f, 3));
-        NoOfEmp.add(new BarEntry(1369f, 4));
-        NoOfEmp.add(new BarEntry(1487f, 5));
-        NoOfEmp.add(new BarEntry(1501f, 6));
-        NoOfEmp.add(new BarEntry(1645f, 7));
-        NoOfEmp.add(new BarEntry(1578f, 8));
-        NoOfEmp.add(new BarEntry(1695f, 9));
+        NoOfEmp.add(new BarEntry(10f, 0));
+        NoOfEmp.add(new BarEntry(20f, 1));
+        NoOfEmp.add(new BarEntry(20.5f, 2));
+        NoOfEmp.add(new BarEntry(30f, 3));
+        NoOfEmp.add(new BarEntry(44.5f, 4));
+        NoOfEmp.add(new BarEntry(50f, 5));
+        NoOfEmp.add(new BarEntry(56f, 6));
+        NoOfEmp.add(new BarEntry(60f, 7));
+        NoOfEmp.add(new BarEntry(70f, 8));
+        NoOfEmp.add(new BarEntry(72f, 9));
 
         ArrayList year = new ArrayList();
 
@@ -147,14 +148,6 @@ public class HomeFragment extends Fragment
         //ViewModelProviders creates and manages ViewModels
         mCoffeeViewModel = ViewModelProviders.of(this).get(CoffeeViewModel.class);
 
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
-        {
-            @Override
-            public void onChanged(@Nullable String s)
-            {
-                //textView.setText(s);
-            }
-        });
         return root;
     }
 
@@ -181,7 +174,7 @@ public class HomeFragment extends Fragment
                     coffee.getTimes().add(formatter.format(date));
                     mCoffeeViewModel.insert(coffee);
                 }
-                else
+                else if(num > 1)
                 {
                     if (retrievedCoffee != null)
                     {
@@ -192,24 +185,10 @@ public class HomeFragment extends Fragment
                         Log.d("retrievedTimesCoffeeTime0", retrievedCoffee.getTimes().get(0));
                         mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes));
                     }
+
+                    initiateNotification();
                 }
 
-            }
-        });
-
-        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
-        {
-            @Override
-            public void onChanged(List<Coffee> coffees)
-            {
-                //Non-efficient way to get the Coffee object but it will work for now
-                for (int i = 0; i < coffees.size(); i++)
-                {
-                    if (coffees.get(i).getDate().equals(mDateTextView.getText().toString()))
-                    {
-                        retrievedCoffee = coffees.get(i);
-                    }
-                }
             }
         });
 
@@ -234,6 +213,25 @@ public class HomeFragment extends Fragment
                 }
             }
         });
+
+        String test = mCoffeeViewModel.findCoffee(mDateTextView.getText().toString()).getDate();
+        Log.d("Find coffee: ", test);
+
+        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
+        {
+            @Override
+            public void onChanged(List<Coffee> coffees)
+            {
+                //Non-efficient way to get the Coffee object but it will work for now
+                for (int i = 0; i < coffees.size(); i++)
+                {
+                    if (coffees.get(i).getDate().equals(mDateTextView.getText().toString()))
+                    {
+                        retrievedCoffee = coffees.get(i);
+                    }
+                }
+            }
+        });
     }
 
     public void initiateNotification()
@@ -252,7 +250,7 @@ public class HomeFragment extends Fragment
         if (!alarmUp)
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, interval, notifyPendingIntent);
 
-            //If the user adds another cup of coffee then reset the timer
+        //If the user adds another cup of coffee then reset the timer
         else
         {
             //Cancel the alarm

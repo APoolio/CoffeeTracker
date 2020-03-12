@@ -26,6 +26,8 @@ public class Coffee
     @ColumnInfo(name = "timeList")
     private ArrayList<String> mTimes = new ArrayList<>();
 
+    //@ColumnInfo(name = "productivityList")
+    //private ArrayList<String> mProductivity = new ArrayList<>();
 
     public Coffee(@NonNull String date, int count, ArrayList<String> times)
     {
@@ -39,6 +41,8 @@ public class Coffee
     public int getCount() { return mCount; }
 
     public ArrayList<String> getTimes() { return mTimes; }
+
+    public ArrayList<String> getProductivity() { return mTimes; }
 
     public void setCount (int count) { this.mCount = count; }
 

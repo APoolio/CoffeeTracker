@@ -14,6 +14,7 @@ public class CoffeeViewModel extends AndroidViewModel
     //Reference to the repo
     private CoffeeRepository mRepository;
     private LiveData<List<Coffee>> mCoffee;
+    private LiveData<Coffee> findCoffee;
 
     public CoffeeViewModel(Application application)
     {
@@ -31,4 +32,6 @@ public class CoffeeViewModel extends AndroidViewModel
     public void updateCount(Coffee coffee) { mRepository.updateCount(coffee); }
 
     public LiveData<List<Coffee>> getAllCoffee() { return mCoffee; }
+
+    public Coffee findCoffee(String date) { return mRepository.findCoffee(date); }
 }
