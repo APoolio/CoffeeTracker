@@ -137,13 +137,13 @@ public class HomeFragment extends Fragment
         //So we are calling getActivity() to reference the activity
         mNotificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
 
-        //Get the coffee count number passed through the notification intent
+        /*//Get the coffee count number passed through the notification intent
         Intent intent = getActivity().getIntent();
         String coffeeCount = Integer.toString(intent.getIntExtra(numberExtra, 0));
-        num = intent.getIntExtra(numberExtra, 0);
+        //num = intent.getIntExtra(numberExtra, 0);
         //Toast.makeText(getActivity(), test, Toast.LENGTH_SHORT).show();
 
-        mCoffeeNumber.setText(coffeeCount);
+        mCoffeeNumber.setText(coffeeCount);*/
 
         //Associating our ViewModel with our UI controller
         //ViewModelProviders creates and manages ViewModels
@@ -157,12 +157,6 @@ public class HomeFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
-
-        if(retrievedCoffee != null)
-        {
-            Log.d("Loading: ", Integer.toString(retrievedCoffee.getCount()));
-            mCoffeeNumber.setText(Integer.toString(retrievedCoffee.getCount()));
-        }
 
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()
@@ -207,15 +201,10 @@ public class HomeFragment extends Fragment
             {
                 if (num != 0)
                 {
-                    Log.d("Num:", Integer.toString(num));
                     num--;
-                    mCoffeeNumber.setText(String.valueOf(num));
+                    mCoffeeNumber.setText(Integer.toString(num));
                     Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
-                    if (num != 1)
-                    {
-                        mCoffeeViewModel.updateCount(coffee);
-                    }
-                    else mCoffeeViewModel.insert(coffee);
+                    mCoffeeViewModel.insert(coffee);
 
                     initiateNotification();
                 }
@@ -277,7 +266,7 @@ public class HomeFragment extends Fragment
         mNotificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
 
         //Creating our notificationChannel with our desired parameters
-        NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, "Stand up Notification!", NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, "Track Productivity!", NotificationManager.IMPORTANCE_HIGH);
 
         //Our set parameters
         notificationChannel.enableLights(true);
