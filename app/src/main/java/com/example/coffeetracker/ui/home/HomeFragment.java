@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
+import com.example.coffeetracker.CoffeeRepository;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -157,6 +158,12 @@ public class HomeFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
 
+        if(retrievedCoffee != null)
+        {
+            Log.d("Loading: ", Integer.toString(retrievedCoffee.getCount()));
+            mCoffeeNumber.setText(Integer.toString(retrievedCoffee.getCount()));
+        }
+
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()
         {
@@ -200,6 +207,7 @@ public class HomeFragment extends Fragment
             {
                 if (num != 0)
                 {
+                    Log.d("Num:", Integer.toString(num));
                     num--;
                     mCoffeeNumber.setText(String.valueOf(num));
                     Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
@@ -214,8 +222,8 @@ public class HomeFragment extends Fragment
             }
         });
 
-        String test = mCoffeeViewModel.findCoffee(mDateTextView.getText().toString()).getDate();
-        Log.d("Find coffee: ", test);
+        //String test = mCoffeeViewModel.findCoffee(mDateTextView.getText().toString()).getDate();
+        //Log.d("Find coffee: ", test);
 
         mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
         {
@@ -228,6 +236,8 @@ public class HomeFragment extends Fragment
                     if (coffees.get(i).getDate().equals(mDateTextView.getText().toString()))
                     {
                         retrievedCoffee = coffees.get(i);
+                        mCoffeeNumber.setText(Integer.toString(retrievedCoffee.getCount()));
+                        num = retrievedCoffee.getCount();
                     }
                 }
             }

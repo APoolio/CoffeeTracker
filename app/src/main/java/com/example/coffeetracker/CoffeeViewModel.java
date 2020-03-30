@@ -33,5 +33,5 @@ public class CoffeeViewModel extends AndroidViewModel
 
     public LiveData<List<Coffee>> getAllCoffee() { return mCoffee; }
 
-    public Coffee findCoffee(String date) { return mRepository.findCoffee(date); }
+    //public Coffee findCoffee(String date) { return mRepository.findCoffee(date); }
 }

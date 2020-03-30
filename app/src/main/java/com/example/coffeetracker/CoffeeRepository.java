@@ -36,7 +36,7 @@ public class CoffeeRepository
         return mAllCoffee;
     }
 
-    //Coffee findCoffee(String date) { return mCoffeeDao.findCoffee(date); }
+    //Coffee findCoffee(String date) { return new findCoffeeAsyncTask(date).execute(); }
 
     private static class insertAsyncTask extends AsyncTask<Coffee, Void, Void>
     {
@@ -71,24 +71,23 @@ public class CoffeeRepository
         }
     }
 
-    private static class findCoffeeAsyncTask extends AsyncTask<Void, Void, String>
+    private class findCoffeeAsyncTask extends AsyncTask<Void, Void, String>
     {
         private CoffeeDao mAsyncTaskDao;
         private String date;
 
         //Constructor for the AsyncTask. Passed in a com.example.roomwordssample.WordDao to call the insert method
-        public findCoffeeAsyncTask(String date, CoffeeDao dao)
+        public findCoffeeAsyncTask(String date)
         {
-            mAsyncTaskDao = dao;
             this.date = date;
         }
 
-        //Calling insert on another thread
         @Override
         protected String doInBackground(Void... params)
         {
+            mAsyncTaskDao = mCoffeeDao;
             mAsyncTaskDao.findCoffee(date);
-            return null;
+            return mAsyncTaskDao.findCoffee(date).getDate();
         }
     }
 }
