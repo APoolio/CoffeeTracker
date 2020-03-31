@@ -33,6 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver
         Intent contentIntent = new Intent(context, MainActivity.class);
         //Putting the coffee count number in the notification intent
         contentIntent.putExtra(numberExtra, num);
+        contentIntent.putExtra("GalleryFragment", "productivityMenu");
 
         //FLAG_UPDATE_CURRENT flag tells the system to use the old Intent but replace the extras
         PendingIntent contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -25,4 +25,6 @@
     <string name="_8">8</string>
     <string name="_9">9</string>
     <string name="_10">10</string>
+    <string name="how_productive">Overall, how productive have you been over the last hour?</string>
+    <string name="very_productive_1">Very Productive (1)</string>
 </resources>

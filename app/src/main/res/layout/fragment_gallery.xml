@@ -6,74 +6,71 @@
     android:layout_height="match_parent"
     tools:context=".ui.gallery.GalleryFragment">
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="15dp"
+        android:text="@string/how_productive"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RadioButton
-            android:id="@+id/radio_1"
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_1" />
+            android:orientation="horizontal"
+            >
 
-        <RadioButton
-            android:id="@+id/radio_2"
-            android:layout_width="wrap_content"
+            <!--<ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/square_button_color"
+                />-->
+
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_2" />
+            android:text="@string/very_productive_1"
+            android:layout_margin="0dp"
+             />
+        </LinearLayout>
 
-        <RadioButton
-            android:id="@+id/radio_3"
-            android:layout_width="wrap_content"
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_3" />
-
-        <RadioButton
-            android:id="@+id/radio_4"
-            android:layout_width="wrap_content"
+            android:text="Somewhat Productive (2)"
+            android:layout_gravity="center_vertical" />
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_4" />
-
-        <RadioButton
-            android:id="@+id/radio_5"
-            android:layout_width="wrap_content"
+            android:text="Average (3)"
+            android:layout_gravity="center_vertical" />
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_5" />
-
-        <RadioButton
-            android:id="@+id/radio_6"
-            android:layout_width="wrap_content"
+            android:text="Not Very Productive (4)"
+            android:layout_gravity="center_vertical" />
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_6" />
+            android:text="Not Productive at All (5)"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
-        <RadioButton
-            android:id="@+id/radio_7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/_7" />
 
-        <RadioButton
-            android:id="@+id/radio_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/_8" />
+    
 
-        <RadioButton
-            android:id="@+id/radio_9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/_9" />
-
-        <RadioButton
-            android:id="@+id/radio_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/_10" />
-
-    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>
