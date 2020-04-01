@@ -11,23 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
-import com.example.coffeetracker.CoffeeRepository;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
-import com.example.coffeetracker.ui.gallery.GalleryFragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -64,25 +59,27 @@ public class HomeFragment extends Fragment
 
     private TextView mDateTextView;
 
-    BarChart productivityChart;
+    private BarChart productivityChart;
 
     //ViewModel
     private CoffeeViewModel mCoffeeViewModel;
 
-    //For notification intent
-    public static String numberExtra = "extra for coffee number";
-
     //Used for notification alarm
-    AlarmManager alarmManager;
+    private AlarmManager alarmManager;
 
-    Coffee retrievedCoffee = null;
+    private Coffee retrievedCoffee = null;
+
+    //Coffee size picker
+    private NumberPicker coffeeSizePicker;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        BarChart productivityChart;
+
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        
+
         //Reference buttons
         mPlusButton = root.findViewById(R.id.increase);
         mMinusButton = root.findViewById(R.id.decrease);
@@ -95,6 +92,10 @@ public class HomeFragment extends Fragment
         String stringDate = date.format(formatter);
         mDateTextView.setText(stringDate);
 
+        coffeeSizePicker = root.findViewById(R.id.coffeeSize);
+        initiatePicker();
+
+
         //Reference to chart
         productivityChart = root.findViewById(R.id.barchart);
 
@@ -102,7 +103,7 @@ public class HomeFragment extends Fragment
 
         NoOfEmp.add(new BarEntry(10f, 0));
         NoOfEmp.add(new BarEntry(20f, 1));
-        NoOfEmp.add(new BarEntry(20.5f, 2));
+        NoOfEmp.add(new BarEntry(25f, 2));
         NoOfEmp.add(new BarEntry(30f, 3));
         NoOfEmp.add(new BarEntry(44.5f, 4));
         NoOfEmp.add(new BarEntry(50f, 5));
@@ -236,13 +237,26 @@ public class HomeFragment extends Fragment
         });
     }
 
-    public void initiateNotification()
+    private void initiatePicker()
+    {
+        //Values for picker
+        String[] pickerValues;
+
+        coffeeSizePicker.setMaxValue(3);
+        coffeeSizePicker.setMinValue(0);
+        pickerValues = new String[] {"8 oz.", "12 oz.", "16 oz.", "20 oz."};
+        coffeeSizePicker.setDisplayedValues(pickerValues);
+    }
+
+    private void initiateNotification()
     {
 
         Toast.makeText(getActivity(), "Start Notification Timer", Toast.LENGTH_SHORT).show();
         long interval = AlarmManager.INTERVAL_HOUR;
 
         Intent notifyIntent = new Intent(getActivity(), AlarmReceiver.class);
+        //For notification intent
+        String numberExtra = "extra for coffee number";
         notifyIntent.putExtra(numberExtra, num);
 
         boolean alarmUp = (PendingIntent.getBroadcast(getActivity(), NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_NO_CREATE) != null);
@@ -263,7 +277,7 @@ public class HomeFragment extends Fragment
         }
     }
 
-    public void createNotificationChannel()
+    private void createNotificationChannel()
     {
         // Create a notification manager object.
         mNotificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
