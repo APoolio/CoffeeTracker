@@ -26,14 +26,18 @@ public class Coffee
     @ColumnInfo(name = "timeList")
     private ArrayList<String> mTimes = new ArrayList<>();
 
+    @ColumnInfo(name = "sizeList")
+    private ArrayList<String> mCoffeeSizes = new ArrayList<>();
+
     //@ColumnInfo(name = "productivityList")
     //private ArrayList<String> mProductivity = new ArrayList<>();
 
-    public Coffee(@NonNull String date, int count, ArrayList<String> times)
+    public Coffee(@NonNull String date, int count, ArrayList<String> times, ArrayList<String> coffeeSizes)
     {
         this.mCount = count;
         this.mDate = date;
         this.mTimes.addAll(times);
+        this.mCoffeeSizes.addAll(coffeeSizes);
     }
 
     public String getDate() { return mDate; }
@@ -43,6 +47,8 @@ public class Coffee
     public ArrayList<String> getTimes() { return mTimes; }
 
     public ArrayList<String> getProductivity() { return mTimes; }
+
+    public ArrayList<String> getCoffeeSizes() { return mCoffeeSizes; }
 
     public void setCount (int count) { this.mCount = count; }
 

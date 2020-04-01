@@ -72,6 +72,9 @@ public class HomeFragment extends Fragment
     //Coffee size picker
     private NumberPicker coffeeSizePicker;
 
+    //Selected coffee size (default is 8)
+    private String selectedCoffeeSize = "8 oz.";
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         BarChart productivityChart;
@@ -161,6 +164,7 @@ public class HomeFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
+        final ArrayList<String> coffeeSizeList = new ArrayList<>();
 
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()
@@ -173,10 +177,11 @@ public class HomeFragment extends Fragment
 
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 Date date = new Date();
-                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
+                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
                 if (num == 1)
                 {
                     coffee.getTimes().add(formatter.format(date));
+                    coffee.getCoffeeSizes().add(selectedCoffeeSize);
                     mCoffeeViewModel.insert(coffee);
                 }
                 else if(num > 1)
@@ -184,11 +189,14 @@ public class HomeFragment extends Fragment
                     if (retrievedCoffee != null)
                     {
                         ArrayList<String> retrievedTimes = retrievedCoffee.getTimes();
+                        ArrayList<String> retrievedSizes = retrievedCoffee.getCoffeeSizes();
                         retrievedTimes.add(formatter.format(date));
+                        retrievedSizes.add(selectedCoffeeSize);
                         Log.d("retrievedTimesCoffeeDate", retrievedCoffee.getDate());
                         Log.d("retrievedTimesCoffeeCount", Integer.toString(retrievedCoffee.getCount()));
                         Log.d("retrievedTimesCoffeeTime0", retrievedCoffee.getTimes().get(0));
-                        mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes));
+                        Log.d("retrievedTimesCoffeeSizes", retrievedCoffee.getCoffeeSizes().get(0));
+                        mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes, retrievedSizes));
                     }
 
                     initiateNotification();
@@ -207,7 +215,7 @@ public class HomeFragment extends Fragment
                 {
                     num--;
                     mCoffeeNumber.setText(Integer.toString(num));
-                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times);
+                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
                     mCoffeeViewModel.insert(coffee);
 
                     initiateNotification();
@@ -240,12 +248,24 @@ public class HomeFragment extends Fragment
     private void initiatePicker()
     {
         //Values for picker
-        String[] pickerValues;
+        final String[] pickerValues;
 
         coffeeSizePicker.setMaxValue(3);
         coffeeSizePicker.setMinValue(0);
         pickerValues = new String[] {"8 oz.", "12 oz.", "16 oz.", "20 oz."};
         coffeeSizePicker.setDisplayedValues(pickerValues);
+
+        coffeeSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1)
+            {
+                int valuePicked = coffeeSizePicker.getValue();
+                selectedCoffeeSize = pickerValues[valuePicked];
+                Log.d("valuePicked: ", pickerValues[valuePicked]);
+            }
+        });
+
+
     }
 
     private void initiateNotification()

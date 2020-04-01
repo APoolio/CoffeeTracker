@@ -14,7 +14,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Coffee.class}, version = 2, exportSchema = false)
+@Database(entities = {Coffee.class}, version = 3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class CoffeeRoomDatabase extends RoomDatabase
 {
