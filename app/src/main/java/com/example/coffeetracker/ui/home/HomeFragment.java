@@ -24,9 +24,13 @@ import com.example.coffeetracker.Coffee;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.SimpleDateFormat;
@@ -77,7 +81,6 @@ public class HomeFragment extends Fragment
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        BarChart productivityChart;
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
@@ -102,37 +105,7 @@ public class HomeFragment extends Fragment
         //Reference to chart
         productivityChart = root.findViewById(R.id.barchart);
 
-        ArrayList NoOfEmp = new ArrayList();
-
-        NoOfEmp.add(new BarEntry(10f, 0));
-        NoOfEmp.add(new BarEntry(20f, 1));
-        NoOfEmp.add(new BarEntry(25f, 2));
-        NoOfEmp.add(new BarEntry(30f, 3));
-        NoOfEmp.add(new BarEntry(44.5f, 4));
-        NoOfEmp.add(new BarEntry(50f, 5));
-        NoOfEmp.add(new BarEntry(56f, 6));
-        NoOfEmp.add(new BarEntry(60f, 7));
-        NoOfEmp.add(new BarEntry(70f, 8));
-        NoOfEmp.add(new BarEntry(72f, 9));
-
-        ArrayList year = new ArrayList();
-
-        year.add("2008");
-        year.add("2009");
-        year.add("2010");
-        year.add("2011");
-        year.add("2012");
-        year.add("2013");
-        year.add("2014");
-        year.add("2015");
-        year.add("2016");
-        year.add("2017");
-
-        BarDataSet bardataset = new BarDataSet(NoOfEmp, "No Of Employee");
-        productivityChart.animateY(5000);
-        BarData data = new BarData(bardataset);
-        bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
-        productivityChart.setData(data);
+        initiateGraph();
 
         //Creating the notification channel
         createNotificationChannel();
@@ -266,6 +239,49 @@ public class HomeFragment extends Fragment
         });
 
 
+    }
+
+    private void initiateGraph()
+    {
+        ArrayList NoOfEmp = new ArrayList();
+        final String[] times = new String[] {"12 AM", "2 AM", "4 AM", "6 AM", "8 AM", "10 AM", "12 PM", "2 PM","4 PM","6 PM","8 PM","10 PM"};
+
+        XAxis xAxis = productivityChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(times));
+        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
+        xAxis.setGranularity(1);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setAxisMinimum(0);
+
+        if(retrievedCoffee != null)
+        {
+            for(int i = 0; i < retrievedCoffee.getCount(); i++)
+            {
+                Log.d("Retrieved Coffee", retrievedCoffee.getTimes().get(i));
+                NoOfEmp.add(new BarEntry(Float.parseFloat(retrievedCoffee.getTimes().get(i)) , Float.parseFloat(retrievedCoffee.getCoffeeSizes().get(i))));
+            }
+        }
+
+
+        NoOfEmp.add(new BarEntry(1, 1));
+        NoOfEmp.add(new BarEntry(2, 2));
+        NoOfEmp.add(new BarEntry(3, 3));
+        NoOfEmp.add(new BarEntry(4, 4));
+
+        //NoOfEmp.add(new BarEntry(5, 5));
+        NoOfEmp.add(new BarEntry(6, 6));
+        NoOfEmp.add(new BarEntry(7, 7));
+        NoOfEmp.add(new BarEntry(8, 8));
+        NoOfEmp.add(new BarEntry(9, 9));
+        NoOfEmp.add(new BarEntry(10, 10));
+
+        ArrayList year = new ArrayList();
+
+        BarDataSet bardataset = new BarDataSet(NoOfEmp, "Coffee Count");
+        productivityChart.animateY(5000);
+        BarData data = new BarData(bardataset);
+        bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
+        productivityChart.setData(data);
     }
 
     private void initiateNotification()
