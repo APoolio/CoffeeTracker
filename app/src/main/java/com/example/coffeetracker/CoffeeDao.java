@@ -23,6 +23,6 @@ public interface CoffeeDao
     @Query("SELECT * FROM coffee_table")
     LiveData<List<Coffee>> getAllCoffee();
 
-    @Query("SELECT * FROM coffee_table WHERE date = :date")
-    Coffee findCoffee(String date);
+    @Query("SELECT * FROM coffee_table")
+    LiveData<Coffee> findCoffee();
 }

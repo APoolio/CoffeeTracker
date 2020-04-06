@@ -11,12 +11,14 @@ public class CoffeeRepository
 {
     private CoffeeDao mCoffeeDao;
     private LiveData<List<Coffee>> mAllCoffee;
+    private LiveData<Coffee> foundCoffee;
 
     CoffeeRepository(Application application)
     {
         CoffeeRoomDatabase db = CoffeeRoomDatabase.getDatabase(application);
         mCoffeeDao = db.coffeeDao();
         mAllCoffee = mCoffeeDao.getAllCoffee();
+        foundCoffee = mCoffeeDao.findCoffee();
     }
 
     //Wrapper for the insert method called from the WordViewModel which uses the WordDao
@@ -35,6 +37,8 @@ public class CoffeeRepository
     {
         return mAllCoffee;
     }
+
+    LiveData<Coffee> getFoundCoffee() { return foundCoffee; }
 
     //Coffee findCoffee(String date) { return new findCoffeeAsyncTask(date).execute(); }
 
@@ -71,23 +75,23 @@ public class CoffeeRepository
         }
     }
 
-    private class findCoffeeAsyncTask extends AsyncTask<Void, Void, String>
-    {
-        private CoffeeDao mAsyncTaskDao;
-        private String date;
-
-        //Constructor for the AsyncTask. Passed in a com.example.roomwordssample.WordDao to call the insert method
-        public findCoffeeAsyncTask(String date)
-        {
-            this.date = date;
-        }
-
-        @Override
-        protected String doInBackground(Void... params)
-        {
-            mAsyncTaskDao = mCoffeeDao;
-            mAsyncTaskDao.findCoffee(date);
-            return mAsyncTaskDao.findCoffee(date).getDate();
-        }
-    }
+//    private class findCoffeeAsyncTask extends AsyncTask<Void, Void, String>
+//    {
+//        private CoffeeDao mAsyncTaskDao;
+//        private String date;
+//
+//        //Constructor for the AsyncTask. Passed in a com.example.roomwordssample.WordDao to call the insert method
+//        public findCoffeeAsyncTask(String date)
+//        {
+//            this.date = date;
+//        }
+//
+//        @Override
+//        protected String doInBackground(Void... params)
+//        {
+//            mAsyncTaskDao = mCoffeeDao;
+//            mAsyncTaskDao.findCoffee(date);
+//            return mAsyncTaskDao.findCoffee(date).getDate();
+//        }
+//    }
 }
