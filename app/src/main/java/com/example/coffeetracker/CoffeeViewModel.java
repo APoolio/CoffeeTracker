@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ public class CoffeeViewModel extends AndroidViewModel
         //Getting a list of all words from the WordRepo
         mRepository = new CoffeeRepository(application);
         mCoffee = mRepository.getAllCoffee();
-        findCoffee = mRepository.getFoundCoffee();
     }
 
     //Inserting a word into the repo which inserts it into the db
@@ -34,7 +34,10 @@ public class CoffeeViewModel extends AndroidViewModel
 
     public LiveData<List<Coffee>> getAllCoffee() { return mCoffee; }
 
-    public LiveData<Coffee> findCoffee() { return findCoffee; }
-
-    //public Coffee findCoffee(String date) { return mRepository.findCoffee(date); }
+    public LiveData<Coffee> findCoffeeVM(String date)
+    {
+        //findCoffee.getValue().getCount();
+        //Log.d("Test Coffee: ", findCoffee.getValue().get(0).getDate());
+        return mRepository.getFoundCoffee(date);
+    }
 }

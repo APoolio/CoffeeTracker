@@ -37,6 +37,7 @@ public abstract class CoffeeRoomDatabase extends RoomDatabase
                     //Wipes and rebuilds instead of migrating
                     //.fallbackToDestructiveMigration() - if no Migration object. Migration is not part of this practical
                     //.addCallback() adds the RoomDatabase.Callback to add a method for when the room db is built
+                    //.allowMainThreadQueries() -- fixes thread locking issue but is not efficient
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), CoffeeRoomDatabase.class, "coffee_database").fallbackToDestructiveMigration().build();
                 }
             }

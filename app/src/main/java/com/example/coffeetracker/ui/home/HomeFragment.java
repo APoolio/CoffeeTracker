@@ -72,6 +72,8 @@ public class HomeFragment extends Fragment
     //Used for notification alarm
     private AlarmManager alarmManager;
 
+    private Coffee foundCoffee = null;
+
     private Coffee retrievedCoffee = null;
 
     //Coffee size picker
@@ -197,6 +199,20 @@ public class HomeFragment extends Fragment
             }
         });
 
+        mCoffeeViewModel.findCoffeeVM(mDateTextView.getText().toString()).observe(getViewLifecycleOwner(), new Observer<Coffee>()
+        {
+            @Override
+            public void onChanged(Coffee coffee)
+            {
+                //initiateGraph();
+                if(coffee != null)
+                {
+                    Log.d("Found Coffee: ", coffee.getDate());
+                    foundCoffee = coffee;
+                }
+            }
+        });
+
         mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
         {
             @Override
@@ -251,12 +267,12 @@ public class HomeFragment extends Fragment
         xAxis.setCenterAxisLabels(true);
         xAxis.setAxisMinimum(0);
 
-        if(retrievedCoffee != null)
+        if(foundCoffee != null)
         {
-            for(int i = 0; i < retrievedCoffee.getCount(); i++)
+            for(int i = 0; i < foundCoffee.getCount(); i++)
             {
-                Log.d("Retrieved Coffee", retrievedCoffee.getTimes().get(i));
-                NoOfEmp.add(new BarEntry(Float.parseFloat(retrievedCoffee.getTimes().get(i)) , Float.parseFloat(retrievedCoffee.getCoffeeSizes().get(i))));
+                Log.d("Found Coffee", foundCoffee.getTimes().get(i));
+                //NoOfEmp.add(new BarEntry(Float.parseFloat(retrievedCoffee.getTimes().get(i)) , Float.parseFloat(retrievedCoffee.getCoffeeSizes().get(i))));
             }
         }
 
