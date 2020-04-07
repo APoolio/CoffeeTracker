@@ -26,6 +26,7 @@ import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -80,7 +81,7 @@ public class HomeFragment extends Fragment
     private NumberPicker coffeeSizePicker;
 
     //Selected coffee size (default is 8)
-    private String selectedCoffeeSize = "8 oz.";
+    private String selectedCoffeeSize = "8";
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -204,11 +205,25 @@ public class HomeFragment extends Fragment
             @Override
             public void onChanged(Coffee coffee)
             {
+                ArrayList CoffeeCords = new ArrayList();
+                String coffeeTime;
                 //initiateGraph();
                 if(coffee != null)
                 {
-                    Log.d("Found Coffee: ", coffee.getDate());
-                    foundCoffee = coffee;
+                    //Creating data entries (cords) for the graph
+                    for(int i = 0; i < coffee.getCount(); i++)
+                    {
+                        coffeeTime = coffee.getCoffeeSizes().get(i);
+                        CoffeeCords.add(new BarEntry(i, Integer.parseInt(coffee.getCoffeeSizes().get(i))));
+                    }
+
+                    BarDataSet bardataset = new BarDataSet(CoffeeCords, "Coffee Count");
+                    productivityChart.animateY(5000);
+                    BarData data = new BarData(bardataset);
+                    bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
+                    productivityChart.setData(data);
+                    productivityChart.setVisibleXRangeMaximum(12);
+
                 }
             }
         });
@@ -236,10 +251,13 @@ public class HomeFragment extends Fragment
     {
         //Values for picker
         final String[] pickerValues;
+        final String[] intPickerValues;
 
         coffeeSizePicker.setMaxValue(3);
         coffeeSizePicker.setMinValue(0);
+
         pickerValues = new String[] {"8 oz.", "12 oz.", "16 oz.", "20 oz."};
+        intPickerValues = new String[] {"8", "12", "16", "20"};
         coffeeSizePicker.setDisplayedValues(pickerValues);
 
         coffeeSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -247,7 +265,7 @@ public class HomeFragment extends Fragment
             public void onValueChange(NumberPicker numberPicker, int i, int i1)
             {
                 int valuePicked = coffeeSizePicker.getValue();
-                selectedCoffeeSize = pickerValues[valuePicked];
+                selectedCoffeeSize = intPickerValues[valuePicked];
                 Log.d("valuePicked: ", pickerValues[valuePicked]);
             }
         });
@@ -255,47 +273,28 @@ public class HomeFragment extends Fragment
 
     }
 
+    //Creating the layout of the chart
     private void initiateGraph()
     {
-        ArrayList NoOfEmp = new ArrayList();
         final String[] times = new String[] {"12 AM", "2 AM", "4 AM", "6 AM", "8 AM", "10 AM", "12 PM", "2 PM","4 PM","6 PM","8 PM","10 PM"};
 
         XAxis xAxis = productivityChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(times));
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-        xAxis.setGranularity(1);
+        xAxis.setGranularity(5);
         xAxis.setCenterAxisLabels(true);
         xAxis.setAxisMinimum(0);
+        xAxis.setAxisMaximum(12);
+        xAxis.setLabelCount(12);
 
-        if(foundCoffee != null)
-        {
-            for(int i = 0; i < foundCoffee.getCount(); i++)
-            {
-                Log.d("Found Coffee", foundCoffee.getTimes().get(i));
-                //NoOfEmp.add(new BarEntry(Float.parseFloat(retrievedCoffee.getTimes().get(i)) , Float.parseFloat(retrievedCoffee.getCoffeeSizes().get(i))));
-            }
-        }
+        YAxis left = productivityChart.getAxisLeft();
+        left.setAxisMinimum(0);
+        left.setAxisMaximum(30);
+        left.setGranularity(10);
 
 
-        NoOfEmp.add(new BarEntry(1, 1));
-        NoOfEmp.add(new BarEntry(2, 2));
-        NoOfEmp.add(new BarEntry(3, 3));
-        NoOfEmp.add(new BarEntry(4, 4));
-
-        //NoOfEmp.add(new BarEntry(5, 5));
-        NoOfEmp.add(new BarEntry(6, 6));
-        NoOfEmp.add(new BarEntry(7, 7));
-        NoOfEmp.add(new BarEntry(8, 8));
-        NoOfEmp.add(new BarEntry(9, 9));
-        NoOfEmp.add(new BarEntry(10, 10));
-
-        ArrayList year = new ArrayList();
-
-        BarDataSet bardataset = new BarDataSet(NoOfEmp, "Coffee Count");
-        productivityChart.animateY(5000);
-        BarData data = new BarData(bardataset);
-        bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
-        productivityChart.setData(data);
+        YAxis right = productivityChart.getAxisRight();
+        right.setGranularity(5);
     }
 
     private void initiateNotification()

@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class CoffeeViewModel extends AndroidViewModel
 
     public LiveData<List<Coffee>> getAllCoffee() { return mCoffee; }
 
+    //Could use Transformations. Will be more efficient
     public LiveData<Coffee> findCoffeeVM(String date)
     {
         //findCoffee.getValue().getCount();
