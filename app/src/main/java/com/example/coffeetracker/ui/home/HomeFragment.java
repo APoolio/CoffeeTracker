@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
 import com.example.coffeetracker.CoffeeViewModel;
+import com.example.coffeetracker.MyXAxisValueFormatter;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -35,15 +36,18 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static java.lang.System.currentTimeMillis;
 
 public class HomeFragment extends Fragment
 {
@@ -152,12 +156,13 @@ public class HomeFragment extends Fragment
                 num++;
                 mCoffeeNumber.setText(String.valueOf(num));
 
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                //DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = new Date();
+
                 Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
                 if (num == 1)
                 {
-                    coffee.getTimes().add(formatter.format(date));
+                    coffee.getTimes().add(Long.toString(date.getTime()));
                     coffee.getCoffeeSizes().add(selectedCoffeeSize);
                     mCoffeeViewModel.insert(coffee);
                 }
@@ -167,7 +172,7 @@ public class HomeFragment extends Fragment
                     {
                         ArrayList<String> retrievedTimes = retrievedCoffee.getTimes();
                         ArrayList<String> retrievedSizes = retrievedCoffee.getCoffeeSizes();
-                        retrievedTimes.add(formatter.format(date));
+                        retrievedTimes.add(Long.toString(date.getTime()));
                         retrievedSizes.add(selectedCoffeeSize);
                         Log.d("retrievedTimesCoffeeDate", retrievedCoffee.getDate());
                         Log.d("retrievedTimesCoffeeCount", Integer.toString(retrievedCoffee.getCount()));
@@ -207,6 +212,7 @@ public class HomeFragment extends Fragment
             {
                 ArrayList CoffeeCords = new ArrayList();
                 String coffeeTime;
+
                 //initiateGraph();
                 if(coffee != null)
                 {
@@ -216,15 +222,13 @@ public class HomeFragment extends Fragment
                         coffeeTime = coffee.getCoffeeSizes().get(i);
                         CoffeeCords.add(new BarEntry(i, Integer.parseInt(coffee.getCoffeeSizes().get(i))));
                     }
-
-                    BarDataSet bardataset = new BarDataSet(CoffeeCords, "Coffee Count");
                     productivityChart.animateY(5000);
-                    BarData data = new BarData(bardataset);
-                    bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
-                    productivityChart.setData(data);
-                    productivityChart.setVisibleXRangeMaximum(12);
-
                 }
+
+                BarDataSet bardataset = new BarDataSet(CoffeeCords, "Coffee Count");
+                BarData data = new BarData(bardataset);
+                bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
+                productivityChart.setData(data);
             }
         });
 
@@ -279,13 +283,12 @@ public class HomeFragment extends Fragment
         final String[] times = new String[] {"12 AM", "2 AM", "4 AM", "6 AM", "8 AM", "10 AM", "12 PM", "2 PM","4 PM","6 PM","8 PM","10 PM"};
 
         XAxis xAxis = productivityChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(times));
+        xAxis.setValueFormatter(new MyXAxisValueFormatter(times));
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-        xAxis.setGranularity(5);
+        xAxis.setGranularity(1f);
         xAxis.setCenterAxisLabels(true);
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(12);
-        xAxis.setLabelCount(12);
+        xAxis.setAxisMinimum(0f);
+        xAxis.setAxisMaximum(11f);
 
         YAxis left = productivityChart.getAxisLeft();
         left.setAxisMinimum(0);
