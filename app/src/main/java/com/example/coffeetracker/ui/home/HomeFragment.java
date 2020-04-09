@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment
                         String floatPoint = nums[0] + "." + nums[1];
                         Log.d("Cord: ", floatPoint);
                         //xNew = Long.parseLong(coffee.getTimes().get(i)) - referenceTime;
-                        CoffeeCords.add(new BarEntry(Float.valueOf(floatPoint) / 2, Integer.parseInt(coffee.getCoffeeSizes().get(i))));
+                        CoffeeCords.add(new BarEntry(Float.valueOf(floatPoint), Integer.parseInt(coffee.getCoffeeSizes().get(i))));
                     }
                     productivityChart.animateY(5000);
                 }
@@ -284,19 +284,21 @@ public class HomeFragment extends Fragment
     //Creating the layout of the chart
     private void initiateGraph()
     {
-        final String[] times = new String[] {"12 AM", "2 AM", "4 AM", "6 AM", "8 AM", "10 AM", "12 PM", "2 PM", "4 PM", "6 PM", "8 PM", "10 PM", "12 AM"};
+        final String[] times = new String[] {"12 AM","1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM", "12 AM"};
 
         XAxis xAxis = productivityChart.getXAxis();
         xAxis.setValueFormatter(new MyXAxisValueFormatter(times));
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setGranularity(1f);
         xAxis.setAxisMinimum(0f);
-        xAxis.setAxisMaximum(12f);
+        xAxis.setAxisMaximum(23f);
+
+        final String[] sizes = new String[] {"8 oz.", "12 oz.","16 oz.","20 oz.","24 oz."};
 
         YAxis left = productivityChart.getAxisLeft();
         left.setAxisMinimum(0);
         left.setAxisMaximum(30);
-        left.setGranularity(10);
+        left.setGranularity(8);
 
 
         YAxis right = productivityChart.getAxisRight();
