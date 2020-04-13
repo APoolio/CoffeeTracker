@@ -9,7 +9,6 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
-import java.util.List;
 
 //Ha! Coffee Table
 @Entity(tableName = "coffee_table")
@@ -38,6 +37,7 @@ public class Coffee
         this.mDate = date;
         this.mTimes.addAll(times);
         this.mCoffeeSizes.addAll(coffeeSizes);
+        //this.mProductivity.addAll(prodLevels);
     }
 
     public String getDate() { return mDate; }

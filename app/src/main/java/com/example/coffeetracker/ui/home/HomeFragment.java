@@ -140,7 +140,6 @@ public class HomeFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
         final ArrayList<String> coffeeSizeList = new ArrayList<>();
-        final ArrayList<Float> prodLevels = new ArrayList<>();
 
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()

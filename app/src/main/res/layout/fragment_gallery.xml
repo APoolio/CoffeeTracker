@@ -27,46 +27,36 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-
-            <!--<ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/square_button_color"
-                />-->
-
         <Button
+            android:id="@+id/five"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/very_productive_1"
             android:layout_margin="0dp"
-             />
-        </LinearLayout>
-
+            android:onClick="handleProdLevel"/>
         <Button
+            android:id="@+id/four"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Somewhat Productive (2)"
+            android:text="@string/somewhat_productive_4"
             android:layout_gravity="center_vertical" />
         <Button
+            android:id="@+id/three"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Average (3)"
+            android:text="@string/average_3"
             android:layout_gravity="center_vertical" />
         <Button
+            android:id="@+id/two"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Not Very Productive (4)"
+            android:text="@string/not_very_productive_2"
             android:layout_gravity="center_vertical" />
         <Button
+            android:id="@+id/one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Not Productive at All (5)"
+            android:text="@string/not_productive_at_all_1"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 
