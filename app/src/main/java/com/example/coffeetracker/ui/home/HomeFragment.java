@@ -17,13 +17,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.MyXAxisValueFormatter;
+import com.example.coffeetracker.MyYAxisValueFormatter;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -31,9 +31,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.DateFormat;
@@ -41,14 +38,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static java.lang.System.currentTimeMillis;
-import static java.lang.System.setOut;
 
 public class HomeFragment extends Fragment
 {
@@ -78,15 +73,13 @@ public class HomeFragment extends Fragment
     //Used for notification alarm
     private AlarmManager alarmManager;
 
-    private Coffee foundCoffee = null;
-
     private Coffee retrievedCoffee = null;
 
     //Coffee size picker
     private NumberPicker coffeeSizePicker;
 
     //Selected coffee size (default is 8)
-    private String selectedCoffeeSize = "8";
+    private String selectedCoffeeSize = "1";
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -119,7 +112,7 @@ public class HomeFragment extends Fragment
         //Creating the notification channel
         createNotificationChannel();
 
-        alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+        alarmManager = (AlarmManager) Objects.requireNonNull(getActivity()).getSystemService(ALARM_SERVICE);
 
         //Initializing our Notification Manager
         //Have to use getActivity() since calling in a fragment and fragment does not extend Context
@@ -147,6 +140,7 @@ public class HomeFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
         final ArrayList<String> coffeeSizeList = new ArrayList<>();
+        final ArrayList<Float> prodLevels = new ArrayList<>();
 
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()
@@ -157,12 +151,13 @@ public class HomeFragment extends Fragment
                 num++;
                 mCoffeeNumber.setText(String.valueOf(num));
 
-                DateFormat formatter = new SimpleDateFormat("hh:mm:ss");
+                DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
                 Date date = new Date();
 
                 Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
                 if (num == 1)
                 {
+                    Log.d("TIme: ", formatter.format(date));
                     coffee.getTimes().add(formatter.format(date));
                     coffee.getCoffeeSizes().add(selectedCoffeeSize);
                     mCoffeeViewModel.insert(coffee);
@@ -171,6 +166,7 @@ public class HomeFragment extends Fragment
                 {
                     if (retrievedCoffee != null)
                     {
+                        Log.d("TIme: ", formatter.format(date));
                         ArrayList<String> retrievedTimes = retrievedCoffee.getTimes();
                         ArrayList<String> retrievedSizes = retrievedCoffee.getCoffeeSizes();
                         retrievedTimes.add(formatter.format(date));
@@ -198,10 +194,16 @@ public class HomeFragment extends Fragment
                 {
                     num--;
                     mCoffeeNumber.setText(Integer.toString(num));
-                    Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
-                    mCoffeeViewModel.insert(coffee);
+                    //Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
+                    if(retrievedCoffee != null)
+                    {
+                        int sizeLength = retrievedCoffee.getCoffeeSizes().size();
+                        int timeLength = retrievedCoffee.getTimes().size();
 
-                    initiateNotification();
+                        retrievedCoffee.getCoffeeSizes().remove(sizeLength-1);
+                        retrievedCoffee.getTimes().remove(timeLength-1);
+                    }
+                    //mCoffeeViewModel.insert(coffee);
                 }
             }
         });
@@ -212,18 +214,24 @@ public class HomeFragment extends Fragment
             public void onChanged(Coffee coffee)
             {
                 ArrayList CoffeeCords = new ArrayList();
-
+                float percentage;
+                float hour;
+                float minutes;
+                float total;
+                String[] nums;
                 if(coffee != null)
                 {
                     //referenceTime = Long.parseLong(coffee.getTimes().get(0));
                     //Creating data entries (cords) for the graph
                     for(int i = 0; i < coffee.getCount(); i++)
                     {
-                        String[] nums = coffee.getTimes().get(i).split(":",3);
-                        String floatPoint = nums[0] + "." + nums[1];
-                        Log.d("Cord: ", floatPoint);
-                        //xNew = Long.parseLong(coffee.getTimes().get(i)) - referenceTime;
-                        CoffeeCords.add(new BarEntry(Float.valueOf(floatPoint), Integer.parseInt(coffee.getCoffeeSizes().get(i))));
+                        nums = coffee.getTimes().get(i).split(":",3);
+                        hour = Float.parseFloat(nums[0]);
+                        minutes = Float.parseFloat(nums[1]);
+                        percentage = minutes / 60f;
+                        total = hour + percentage;
+
+                        CoffeeCords.add(new BarEntry(total, Float.parseFloat(coffee.getCoffeeSizes().get(i))));
                     }
                     productivityChart.animateY(5000);
                 }
@@ -231,7 +239,10 @@ public class HomeFragment extends Fragment
                 BarDataSet bardataset = new BarDataSet(CoffeeCords, "Coffee Count");
                 BarData data = new BarData(bardataset);
                 bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
-                data.setBarWidth(0.3f);
+                data.setBarWidth(0.1f);
+
+                productivityChart.zoom(3f, 1f, 400f, 3f);
+                //productivityChart.zoomAndCenterAnimated(3, 1, 400f, 3f, YAxis.AxisDependency.RIGHT, 4000);
                 productivityChart.setData(data);
             }
         });
@@ -264,8 +275,8 @@ public class HomeFragment extends Fragment
         coffeeSizePicker.setMaxValue(3);
         coffeeSizePicker.setMinValue(0);
 
-        pickerValues = new String[] {"8 oz.", "12 oz.", "16 oz.", "20 oz."};
-        intPickerValues = new String[] {"8", "12", "16", "20"};
+        pickerValues = new String[] {"8 oz.", "12 oz.", "16 oz.", "20 oz.", "24 oz."};
+        intPickerValues = new String[] {"1", "2", "3", "4", "5"};
         coffeeSizePicker.setDisplayedValues(pickerValues);
 
         coffeeSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -293,16 +304,21 @@ public class HomeFragment extends Fragment
         xAxis.setAxisMinimum(0f);
         xAxis.setAxisMaximum(23f);
 
-        final String[] sizes = new String[] {"8 oz.", "12 oz.","16 oz.","20 oz.","24 oz."};
+        final String[] sizes = new String[] {"0 oz.", "8 oz.", "12 oz.","16 oz.","20 oz.","24 oz."};
 
         YAxis left = productivityChart.getAxisLeft();
+        left.setValueFormatter(new MyYAxisValueFormatter(sizes));
         left.setAxisMinimum(0);
-        left.setAxisMaximum(30);
-        left.setGranularity(8);
+        left.setAxisMaximum(5);
+        left.setGranularity(1);
 
+        final String[] prodScale = new String[] {"0","1","2","3","4","5"};
 
         YAxis right = productivityChart.getAxisRight();
-        right.setGranularity(5);
+        right.setValueFormatter(new MyYAxisValueFormatter(prodScale));
+        right.setAxisMinimum(0);
+        right.setAxisMaximum(5);
+        right.setGranularity(1);
     }
 
     private void initiateNotification()
@@ -330,6 +346,7 @@ public class HomeFragment extends Fragment
             if (alarmManager != null)
                 alarmManager.cancel(notifyPendingIntent);
 
+            assert alarmManager != null;
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME, interval, notifyPendingIntent);
         }
     }
@@ -337,7 +354,7 @@ public class HomeFragment extends Fragment
     private void createNotificationChannel()
     {
         // Create a notification manager object.
-        mNotificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) Objects.requireNonNull(getActivity()).getSystemService(NOTIFICATION_SERVICE);
 
         //Creating our notificationChannel with our desired parameters
         NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, "Track Productivity!", NotificationManager.IMPORTANCE_HIGH);
