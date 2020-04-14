@@ -361,7 +361,7 @@ public class HomeFragment extends Fragment
         //Our set parameters
         notificationChannel.enableLights(true);
         notificationChannel.enableVibration(true);
-        notificationChannel.setDescription("Notifies every 15 minutes to stand up and walk");
+        notificationChannel.setDescription("Notifies the user to input their productivity level after an hour of consuming coffee");
         mNotificationManager.createNotificationChannel(notificationChannel);
     }
 }

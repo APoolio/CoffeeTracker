@@ -32,8 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/very_productive_1"
-            android:layout_margin="0dp"
-            android:onClick="handleProdLevel"/>
+            android:layout_margin="0dp" />
         <Button
             android:id="@+id/four"
             android:layout_width="match_parent"
