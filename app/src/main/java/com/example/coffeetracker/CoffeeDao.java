@@ -25,4 +25,7 @@ public interface CoffeeDao
 
     @Query("SELECT * FROM coffee_table WHERE date = :date")
     LiveData<Coffee> findCoffee(String date);
+
+    @Query("SELECT * FROM coffee_table WHERE date = :date")
+    Coffee findCoffeeObj(String date);
 }

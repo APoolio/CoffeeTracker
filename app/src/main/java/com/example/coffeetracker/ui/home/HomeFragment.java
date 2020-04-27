@@ -21,6 +21,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.coffeetracker.Coffee;
+import com.example.coffeetracker.CoffeeDao;
+import com.example.coffeetracker.CoffeeRoomDatabase;
 import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.MyXAxisValueFormatter;
 import com.example.coffeetracker.MyYAxisValueFormatter;
@@ -73,7 +75,7 @@ public class HomeFragment extends Fragment
     //Used for notification alarm
     private AlarmManager alarmManager;
 
-    private Coffee retrievedCoffee = null;
+    public Coffee retrievedCoffee = null;
 
     //Coffee size picker
     private NumberPicker coffeeSizePicker;
@@ -81,12 +83,16 @@ public class HomeFragment extends Fragment
     //Selected coffee size (default is 8)
     private String selectedCoffeeSize = "1";
 
+    //
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+
 
         //Reference buttons
         mPlusButton = root.findViewById(R.id.increase);
@@ -140,6 +146,15 @@ public class HomeFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
         final ArrayList<String> coffeeSizeList = new ArrayList<>();
+
+        //Retrieving the current count for the current day
+        CoffeeDao coffeeDao = CoffeeRoomDatabase.getDatabase(getContext()).coffeeDao();
+        Coffee coffeeOBJ = coffeeDao.findCoffeeObj(mDateTextView.getText().toString());
+        if(coffeeOBJ != null)
+        {
+            mCoffeeNumber.setText(Integer.toString(coffeeOBJ.getCount()));
+            num = coffeeOBJ.getCount();
+        }
 
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()
@@ -246,7 +261,7 @@ public class HomeFragment extends Fragment
             }
         });
 
-        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
+        /*mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
         {
             @Override
             public void onChanged(List<Coffee> coffees)
@@ -262,10 +277,10 @@ public class HomeFragment extends Fragment
                     }
                 }
             }
-        });
+        });*/
     }
 
-    private void initiatePicker()
+    private  void initiatePicker()
     {
         //Values for picker
         final String[] pickerValues;

@@ -38,13 +38,23 @@ public abstract class CoffeeRoomDatabase extends RoomDatabase
                     //.fallbackToDestructiveMigration() - if no Migration object. Migration is not part of this practical
                     //.addCallback() adds the RoomDatabase.Callback to add a method for when the room db is built
                     //.allowMainThreadQueries() -- fixes thread locking issue but is not efficient
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), CoffeeRoomDatabase.class, "coffee_database").fallbackToDestructiveMigration().build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), CoffeeRoomDatabase.class, "coffee_database").allowMainThreadQueries().fallbackToDestructiveMigration().build();
                 }
             }
         }
-
         //return if created or already exists
         return INSTANCE;
+    }
+
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+        private final CoffeeDao coffeeDao;
+        public PopulateDbAsync(CoffeeRoomDatabase instance) {
+            coffeeDao = instance.coffeeDao();
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
     }
 
 }
