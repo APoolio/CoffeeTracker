@@ -22,15 +22,21 @@ public class Converters {
         return json;
     }
 
-
-    @TypeConverter
+    /*@TypeConverter
     public static ArrayList<Float> fromFloat(String value) {
         Type listType = new TypeToken<ArrayList<String>>() {}.getType();
         return new Gson().fromJson(value, listType);
-    }
+    }*/
 
     @TypeConverter
-    public static String fromArrayListFloat(ArrayList<Float> list) {
+    public static ArrayList<Integer> fromStringInteger(String value) {
+        Type listType = new TypeToken<ArrayList<Integer>>() {}.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    //Converting our ArrayList<Integer> to string format
+    @TypeConverter
+    public static String fromArrayListInteger(ArrayList<Integer> list) {
         Gson gson = new Gson();
         String json = gson.toJson(list);
         return json;

@@ -83,16 +83,12 @@ public class HomeFragment extends Fragment
     //Selected coffee size (default is 8)
     private String selectedCoffeeSize = "1";
 
-    //
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-
-
 
         //Reference buttons
         mPlusButton = root.findViewById(R.id.increase);
@@ -101,10 +97,7 @@ public class HomeFragment extends Fragment
 
         mDateTextView = root.findViewById(R.id.coffeeTitle);
 
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
-        String stringDate = date.format(formatter);
-        mDateTextView.setText(stringDate);
+        mDateTextView.setText(currentDate());
 
         coffeeSizePicker = root.findViewById(R.id.coffeeSize);
         initiatePicker();
@@ -125,14 +118,6 @@ public class HomeFragment extends Fragment
         //So we are calling getActivity() to reference the activity
         mNotificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
 
-        /*//Get the coffee count number passed through the notification intent
-        Intent intent = getActivity().getIntent();
-        String coffeeCount = Integer.toString(intent.getIntExtra(numberExtra, 0));
-        //num = intent.getIntExtra(numberExtra, 0);
-        //Toast.makeText(getActivity(), test, Toast.LENGTH_SHORT).show();
-
-        mCoffeeNumber.setText(coffeeCount);*/
-
         //Associating our ViewModel with our UI controller
         //ViewModelProviders creates and manages ViewModels
         mCoffeeViewModel = ViewModelProviders.of(this).get(CoffeeViewModel.class);
@@ -146,6 +131,8 @@ public class HomeFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         final ArrayList<String> times = new ArrayList<>();
         final ArrayList<String> coffeeSizeList = new ArrayList<>();
+        final ArrayList<Integer> productivityLevels = new ArrayList<>();
+        final ArrayList<String> productivityLevelsTime = new ArrayList<>();
 
         //Retrieving the current count for the current day
         CoffeeDao coffeeDao = CoffeeRoomDatabase.getDatabase(getContext()).coffeeDao();
@@ -165,31 +152,31 @@ public class HomeFragment extends Fragment
                 num++;
                 mCoffeeNumber.setText(String.valueOf(num));
 
-                DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-                Date date = new Date();
-
-                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
+                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList, productivityLevelsTime, productivityLevels);
                 if (num == 1)
                 {
-                    Log.d("TIme: ", formatter.format(date));
-                    coffee.getTimes().add(formatter.format(date));
+                    Log.d("TIme: ", additionTime());
+                    coffee.getTimes().add(additionTime());
                     coffee.getCoffeeSizes().add(selectedCoffeeSize);
                     mCoffeeViewModel.insert(coffee);
                 }
                 else if(num > 1)
                 {
+
+                    /* Inefficient way to update our coffee_table but will work in the mean time */
                     if (retrievedCoffee != null)
                     {
-                        Log.d("TIme: ", formatter.format(date));
+                        Log.d("TIme: ", additionTime());
+
                         ArrayList<String> retrievedTimes = retrievedCoffee.getTimes();
                         ArrayList<String> retrievedSizes = retrievedCoffee.getCoffeeSizes();
-                        retrievedTimes.add(formatter.format(date));
+                        ArrayList<Integer> retrievedProdLevels = retrievedCoffee.getProductivity();
+                        ArrayList<String> retrievedProdTimes = retrievedCoffee.getProductivityTime();
+
+                        retrievedTimes.add(additionTime());
                         retrievedSizes.add(selectedCoffeeSize);
-                        Log.d("retrievedTimesCoffeeDate", retrievedCoffee.getDate());
-                        Log.d("retrievedTimesCoffeeCount", Integer.toString(retrievedCoffee.getCount()));
-                        Log.d("retrievedTimesCoffeeTime0", retrievedCoffee.getTimes().get(0));
-                        Log.d("retrievedTimesCoffeeSizes", retrievedCoffee.getCoffeeSizes().get(0));
-                        mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes, retrievedSizes));
+
+                        mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes, retrievedSizes,retrievedProdTimes, retrievedProdLevels));
                     }
 
                     initiateNotification();
@@ -280,7 +267,21 @@ public class HomeFragment extends Fragment
         });*/
     }
 
-    private  void initiatePicker()
+    public static String additionTime()
+    {
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        return formatter.format(date);
+    }
+
+    public static String currentDate()
+    {
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
+        return date.format(formatter);
+    }
+
+    private void initiatePicker()
     {
         //Values for picker
         final String[] pickerValues;

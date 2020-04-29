@@ -5,15 +5,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 //Ha! Coffee Table
 @Entity(tableName = "coffee_table")
 public class Coffee
 {
+    /* Table info */
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "date")
@@ -28,29 +29,59 @@ public class Coffee
     @ColumnInfo(name = "sizeList")
     private ArrayList<String> mCoffeeSizes = new ArrayList<>();
 
-    //@ColumnInfo(name = "productivityList")
-    //private ArrayList<String> mProductivity = new ArrayList<>();
+    @ColumnInfo(name = "prodTimeList")
+    private ArrayList<String> mProductivityTime = new ArrayList<>();
 
-    public Coffee(@NonNull String date, int count, ArrayList<String> times, ArrayList<String> coffeeSizes)
+    @ColumnInfo(name = "productivityList")
+    private ArrayList<Integer> mProductivity = new ArrayList<>();
+
+    /* Coffee constructor */
+    public Coffee(@NonNull String date, int count, ArrayList<String> times, ArrayList<String> coffeeSizes, ArrayList<String> productivityLevelTimes, ArrayList<Integer> productivityLevels)
     {
         this.mCount = count;
         this.mDate = date;
         this.mTimes.addAll(times);
         this.mCoffeeSizes.addAll(coffeeSizes);
-        //this.mProductivity.addAll(prodLevels);
+        this.mProductivityTime.addAll(productivityLevelTimes);
+        this.mProductivity.addAll(productivityLevels);
     }
 
+    public Coffee(){}
+
+    /* Getters and Setters */
     public String getDate() { return mDate; }
 
     public int getCount() { return mCount; }
 
     public ArrayList<String> getTimes() { return mTimes; }
 
-    public ArrayList<String> getProductivity() { return mTimes; }
+    public ArrayList<Integer> getProductivity() { return mProductivity; }
 
     public ArrayList<String> getCoffeeSizes() { return mCoffeeSizes; }
+
+    public ArrayList<String> getProductivityTime() { return mProductivityTime; }
 
     public void setCount (int count) { this.mCount = count; }
 
     public void setDate (String date) { this.mDate = date; }
+
+    public void setProductivity(ArrayList<Integer> prodLevels)
+    {
+        this.mProductivity = prodLevels;
+    }
+
+    public void setProductivityTime(ArrayList<String> prodLevelTimes)
+    {
+        this.mProductivityTime = prodLevelTimes;
+    }
+
+    public void setTimes (ArrayList<String> times)
+    {
+        this.mTimes = times;
+    }
+
+    public void setCoffeeSizes (ArrayList<String> sizes)
+    {
+        this.mCoffeeSizes = sizes;
+    }
 }
