@@ -59,10 +59,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener
         //Retrieving the current count for the current day
         CoffeeDao coffeeDao = CoffeeRoomDatabase.getDatabase(getContext()).coffeeDao();
         coffeeOBJ = coffeeDao.findCoffeeObj(HomeFragment.currentDate());
-        if(coffeeOBJ != null)
-        {
-
-        }
 
         mCoffeeViewModel = ViewModelProviders.of(this).get(CoffeeViewModel.class);
     }
@@ -75,31 +71,26 @@ public class GalleryFragment extends Fragment implements View.OnClickListener
         switch(view.getId())
         {
             case R.id.one:
-                Log.d("TEST PROD: ", "HELLO 1");
                 prodLevel = 1;
                 break;
             case R.id.two:
-                Log.d("TEST PROD: ", "HELLO 2");
                 prodLevel = 2;
                 break;
             case R.id.three:
-                Log.d("TEST PROD: ", "HELLO 3");
                 prodLevel = 3;
                 break;
             case R.id.four:
-                Log.d("TEST PROD: ", "HELLO 4");
                 prodLevel = 4;
                 break;
             case R.id.five:
-                Log.d("TEST PROD: ", "HELLO 5");
                 prodLevel = 5;
                 break;
         }
 
         if((coffeeOBJ != null) && (prodLevel != 0))
         {
-            ArrayList<Integer> coffeeProdLevels = new ArrayList<>();
-            ArrayList<String> coffeeProdLevelTimes = new ArrayList<>();
+            ArrayList<Integer> coffeeProdLevels;
+            ArrayList<String> coffeeProdLevelTimes;
 
             coffeeProdLevels = coffeeOBJ.getProductivity();
             coffeeProdLevelTimes = coffeeOBJ.getProductivityTime();

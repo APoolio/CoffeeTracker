@@ -28,11 +28,16 @@ import com.example.coffeetracker.MyXAxisValueFormatter;
 import com.example.coffeetracker.MyYAxisValueFormatter;
 import com.example.coffeetracker.R;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.DateFormat;
@@ -67,7 +72,7 @@ public class HomeFragment extends Fragment
 
     private TextView mDateTextView;
 
-    private BarChart productivityChart;
+    private CombinedChart productivityChart;
 
     //ViewModel
     private CoffeeViewModel mCoffeeViewModel;
@@ -97,7 +102,9 @@ public class HomeFragment extends Fragment
 
         mDateTextView = root.findViewById(R.id.coffeeTitle);
 
-        mDateTextView.setText(currentDate());
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
+        mDateTextView.setText(date.format(formatter));
 
         coffeeSizePicker = root.findViewById(R.id.coffeeSize);
         initiatePicker();
@@ -136,7 +143,7 @@ public class HomeFragment extends Fragment
 
         //Retrieving the current count for the current day
         CoffeeDao coffeeDao = CoffeeRoomDatabase.getDatabase(getContext()).coffeeDao();
-        Coffee coffeeOBJ = coffeeDao.findCoffeeObj(mDateTextView.getText().toString());
+        final Coffee coffeeOBJ = coffeeDao.findCoffeeObj(mDateTextView.getText().toString());
         if(coffeeOBJ != null)
         {
             mCoffeeNumber.setText(Integer.toString(coffeeOBJ.getCount()));
@@ -176,7 +183,13 @@ public class HomeFragment extends Fragment
                         retrievedTimes.add(additionTime());
                         retrievedSizes.add(selectedCoffeeSize);
 
-                        mCoffeeViewModel.insert(new Coffee(retrievedCoffee.getDate(), retrievedCoffee.getCount()+1, retrievedTimes, retrievedSizes,retrievedProdTimes, retrievedProdLevels));
+                        retrievedCoffee.setCount(retrievedCoffee.getCount()+1);
+                        retrievedCoffee.setTimes(retrievedTimes);
+                        retrievedCoffee.setCoffeeSizes(retrievedSizes);
+                        retrievedCoffee.setProductivityTime(retrievedProdTimes);
+                        retrievedCoffee.setProductivity(retrievedProdLevels);
+
+                        mCoffeeViewModel.insert(retrievedCoffee);
                     }
 
                     initiateNotification();
@@ -215,40 +228,47 @@ public class HomeFragment extends Fragment
             public void onChanged(Coffee coffee)
             {
                 ArrayList CoffeeCords = new ArrayList();
-                float percentage;
-                float hour;
-                float minutes;
-                float total;
-                String[] nums;
+                ArrayList ProductivityCords = new ArrayList();
+
                 if(coffee != null)
                 {
                     //referenceTime = Long.parseLong(coffee.getTimes().get(0));
                     //Creating data entries (cords) for the graph
                     for(int i = 0; i < coffee.getCount(); i++)
                     {
-                        nums = coffee.getTimes().get(i).split(":",3);
-                        hour = Float.parseFloat(nums[0]);
-                        minutes = Float.parseFloat(nums[1]);
-                        percentage = minutes / 60f;
-                        total = hour + percentage;
+                        CoffeeCords.add(new BarEntry(createTimeEntry(coffee.getTimes().get(i)), Float.parseFloat(coffee.getCoffeeSizes().get(i))));
+                    }
 
-                        CoffeeCords.add(new BarEntry(total, Float.parseFloat(coffee.getCoffeeSizes().get(i))));
+                    for(int i = 0; i < coffee.getProductivity().size(); i++)
+                    {
+                        ProductivityCords.add(new Entry(createTimeEntry(coffee.getProductivityTime().get(i)),coffee.getProductivity().get(i)));
                     }
                     productivityChart.animateY(5000);
                 }
 
-                BarDataSet bardataset = new BarDataSet(CoffeeCords, "Coffee Count");
-                BarData data = new BarData(bardataset);
-                bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
-                data.setBarWidth(0.1f);
+                CombinedData data = new CombinedData();
 
+                BarDataSet bardataset = new BarDataSet(CoffeeCords, "Coffee Count");
+                BarData barData = new BarData(bardataset);
+                bardataset.setColors(ColorTemplate.MATERIAL_COLORS);
+                barData.setBarWidth(0.1f);
+
+                LineDataSet lineDataSet = new LineDataSet(ProductivityCords, "Productivity Levels");
+                LineData lineData = new LineData(lineDataSet);
+
+                data.setData(barData);
+                data.setData(lineData);
+                productivityChart.setDrawOrder(new CombinedChart.DrawOrder[]{
+                        CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
+                });
                 productivityChart.zoom(3f, 1f, 400f, 3f);
                 //productivityChart.zoomAndCenterAnimated(3, 1, 400f, 3f, YAxis.AxisDependency.RIGHT, 4000);
                 productivityChart.setData(data);
+
             }
         });
 
-        /*mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
+        mCoffeeViewModel.getAllCoffee().observe(getViewLifecycleOwner(), new Observer<List<Coffee>>()
         {
             @Override
             public void onChanged(List<Coffee> coffees)
@@ -256,7 +276,7 @@ public class HomeFragment extends Fragment
                 //Non-efficient way to get the Coffee object but it will work for now
                 for (int i = 0; i < coffees.size(); i++)
                 {
-                    if (coffees.get(i).getDate().equals(mDateTextView.getText().toString()))
+                    if (coffees.get(i).getDate().equals(currentDate()))
                     {
                         retrievedCoffee = coffees.get(i);
                         mCoffeeNumber.setText(Integer.toString(retrievedCoffee.getCount()));
@@ -264,7 +284,17 @@ public class HomeFragment extends Fragment
                     }
                 }
             }
-        });*/
+        });
+    }
+
+    public static float createTimeEntry(String time)
+    {
+        String[] nums = time.split(":",3);
+        float hour = Float.parseFloat(nums[0]);
+        float minutes = Float.parseFloat(nums[1]);
+        float percentage = minutes / 60f;
+        float total = hour + percentage;
+        return total;
     }
 
     public static String additionTime()
