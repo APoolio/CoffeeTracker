@@ -101,6 +101,31 @@
                 android:layout_marginBottom="16dp"
                 android:onClick="decreaseCount"
                 tools:ignore="OnClick" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_consumed"
+                android:layout_alignEnd="@id/center"
+                android:layout_alignTop="@id/center"
+                android:layout_marginTop="85dp"
+                android:textColor="#8C8C8C"
+                />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coffeeCup"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="24dp"
+                android:max="50"
+                android:min="0"
+                android:minWidth="300dp"
+                android:progress="8"
+                android:layout_marginStart="50dp"
+                android:progressTint="@color/colorPrimary"/>
         </RelativeLayout>
 
         <RelativeLayout

@@ -30,4 +30,5 @@
     <string name="not_very_productive_2">Not Very Productive (2)</string>
     <string name="average_3">Average (3)</string>
     <string name="somewhat_productive_4">Somewhat Productive (4)</string>
+    <string name="total_consumed">Total Coffee Consumed (oz.)</string>
 </resources>

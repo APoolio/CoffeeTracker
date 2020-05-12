@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,6 +89,8 @@ public class HomeFragment extends Fragment
     //Selected coffee size (default is 8)
     private String selectedCoffeeSize = "1";
 
+    private ProgressBar progressBar;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
@@ -102,13 +105,16 @@ public class HomeFragment extends Fragment
 
         mDateTextView = root.findViewById(R.id.coffeeTitle);
 
+        //Progress Bar showing consumed coffee amount
+        progressBar = root.findViewById(R.id.progressBar);
+        //progressBar.setProgress(0);
+
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
         mDateTextView.setText(date.format(formatter));
 
         coffeeSizePicker = root.findViewById(R.id.coffeeSize);
         initiatePicker();
-
 
         //Reference to chart
         productivityChart = root.findViewById(R.id.barchart);
