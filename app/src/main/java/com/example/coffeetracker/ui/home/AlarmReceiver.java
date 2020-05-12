@@ -27,8 +27,6 @@ public class AlarmReceiver extends BroadcastReceiver
         //Initializing our Notification Manager
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Integer num = intent.getIntExtra(numberExtra, 0);
-
         //Pending Intent that we will use for the notification content intent
         Intent contentIntent = new Intent(context, MainActivity.class);
         //Putting the coffee count number in the notification intent

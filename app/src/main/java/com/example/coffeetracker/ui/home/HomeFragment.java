@@ -261,7 +261,7 @@ public class HomeFragment extends Fragment
                 productivityChart.setDrawOrder(new CombinedChart.DrawOrder[]{
                         CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
                 });
-                productivityChart.zoom(3f, 1f, 400f, 3f);
+                //productivityChart.zoom(3f, 1f, 400f, 3f);
                 //productivityChart.zoomAndCenterAnimated(3, 1, 400f, 3f, YAxis.AxisDependency.RIGHT, 4000);
                 productivityChart.setData(data);
 
