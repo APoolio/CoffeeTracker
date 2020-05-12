@@ -211,13 +211,13 @@ public class HomeFragment extends Fragment
                     //Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
                     if(retrievedCoffee != null)
                     {
-                        int sizeLength = retrievedCoffee.getCoffeeSizes().size();
-                        int timeLength = retrievedCoffee.getTimes().size();
+                        retrievedCoffee.getCoffeeSizes().remove(retrievedCoffee.getCoffeeSizes().size()-1);
+                        retrievedCoffee.getTimes().remove(retrievedCoffee.getTimes().size()-1);
+                        retrievedCoffee.setCount(retrievedCoffee.getCount()-1);
 
-                        retrievedCoffee.getCoffeeSizes().remove(sizeLength-1);
-                        retrievedCoffee.getTimes().remove(timeLength-1);
+                        //updating current date's entry so graph will be updated dynamically
+                        mCoffeeViewModel.insert(retrievedCoffee);
                     }
-                    //mCoffeeViewModel.insert(coffee);
                 }
             }
         });
