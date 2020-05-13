@@ -28,7 +28,6 @@ import com.example.coffeetracker.CoffeeViewModel;
 import com.example.coffeetracker.MyXAxisValueFormatter;
 import com.example.coffeetracker.MyYAxisValueFormatter;
 import com.example.coffeetracker.R;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -91,6 +90,8 @@ public class HomeFragment extends Fragment
 
     private ProgressBar progressBar;
 
+    private static int progressAmount = 0;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
@@ -107,7 +108,7 @@ public class HomeFragment extends Fragment
 
         //Progress Bar showing consumed coffee amount
         progressBar = root.findViewById(R.id.progressBar);
-        //progressBar.setProgress(0);
+        progressBar.setProgress(progressAmount);
 
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
@@ -198,9 +199,12 @@ public class HomeFragment extends Fragment
                         mCoffeeViewModel.insert(retrievedCoffee);
                     }
 
+
                     initiateNotification();
                 }
 
+                setProgressPlus(selectedCoffeeSize);
+                progressBar.setProgress(progressAmount);
             }
         });
 
@@ -225,6 +229,9 @@ public class HomeFragment extends Fragment
                         mCoffeeViewModel.insert(retrievedCoffee);
                     }
                 }
+
+                setProgressMinus(selectedCoffeeSize);
+                progressBar.setProgress(progressAmount);
             }
         });
 
@@ -293,7 +300,35 @@ public class HomeFragment extends Fragment
         });
     }
 
-    public static float createTimeEntry(String time)
+    //Non-efficient way but it will work for now so I can move on
+    private static void setProgressPlus(String size)
+    {
+        if(size.equals("1"))
+            progressAmount += 8;
+        else if(size.equals("2"))
+            progressAmount += 12;
+        else if(size.equals("3"))
+            progressAmount += 16;
+        else if(size.equals("4"))
+            progressAmount += 20;
+    }
+
+    private static void setProgressMinus(String size)
+    {
+        if(size.equals("1"))
+            progressAmount -= 8;
+        else if(size.equals("2"))
+            progressAmount -= 12;
+        else if(size.equals("3"))
+            progressAmount -= 16;
+        else if(size.equals("4"))
+            progressAmount -= 20;
+
+        if(progressAmount < 0)
+            progressAmount = 0;
+    }
+
+    private static float createTimeEntry(String time)
     {
         String[] nums = time.split(":",3);
         float hour = Float.parseFloat(nums[0]);
@@ -330,7 +365,8 @@ public class HomeFragment extends Fragment
         intPickerValues = new String[] {"1", "2", "3", "4", "5"};
         coffeeSizePicker.setDisplayedValues(pickerValues);
 
-        coffeeSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        coffeeSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener()
+        {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1)
             {
@@ -352,6 +388,7 @@ public class HomeFragment extends Fragment
         xAxis.setValueFormatter(new MyXAxisValueFormatter(times));
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
         xAxis.setAxisMinimum(0f);
         xAxis.setAxisMaximum(23f);
 

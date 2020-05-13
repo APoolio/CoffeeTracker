@@ -69,16 +69,6 @@
                 android:layout_toStartOf="@id/center"
                 android:layout_marginEnd="60dp"/>
 
-            <!--<TextView
-                android:id="@+id/cupHint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/center"
-                android:layout_marginTop="44dp"
-                android:layout_marginEnd="40dp"
-                android:layout_toStartOf="@id/center"
-                android:text="@string/_8_oz" />-->
-
             <ImageButton
                 android:id="@+id/increase"
                 style="@style/PlusButtons"
@@ -106,14 +96,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/total_consumed"
-                android:layout_alignEnd="@id/center"
                 android:layout_alignTop="@id/center"
                 android:layout_marginTop="85dp"
+                android:layout_marginStart="50dp"
                 android:textColor="#8C8C8C"
+                android:textSize="12sp"
                 />
 
             <ProgressBar
                 android:id="@+id/progressBar"
+                android:progressDrawable="@drawable/customprogressbar"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
