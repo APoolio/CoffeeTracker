@@ -35,8 +35,11 @@ public class Coffee
     @ColumnInfo(name = "productivityList")
     private ArrayList<Integer> mProductivity = new ArrayList<>();
 
+    @ColumnInfo(name = "totalConsumed")
+    private int mTotalConsumed;
+
     /* Coffee constructor */
-    public Coffee(@NonNull String date, int count, ArrayList<String> times, ArrayList<String> coffeeSizes, ArrayList<String> productivityLevelTimes, ArrayList<Integer> productivityLevels)
+    public Coffee(@NonNull String date, int count, ArrayList<String> times, ArrayList<String> coffeeSizes, ArrayList<String> productivityLevelTimes, ArrayList<Integer> productivityLevels, int totalConsumed)
     {
         this.mCount = count;
         this.mDate = date;
@@ -44,22 +47,25 @@ public class Coffee
         this.mCoffeeSizes.addAll(coffeeSizes);
         this.mProductivityTime.addAll(productivityLevelTimes);
         this.mProductivity.addAll(productivityLevels);
+        this.mTotalConsumed = totalConsumed;
     }
 
     public Coffee(){}
 
     /* Getters and Setters */
-    public String getDate() { return mDate; }
+    public String getDate() { return this.mDate; }
 
-    public int getCount() { return mCount; }
+    public int getCount() { return this.mCount; }
 
-    public ArrayList<String> getTimes() { return mTimes; }
+    public ArrayList<String> getTimes() { return this.mTimes; }
 
-    public ArrayList<Integer> getProductivity() { return mProductivity; }
+    public ArrayList<Integer> getProductivity() { return this.mProductivity; }
 
-    public ArrayList<String> getCoffeeSizes() { return mCoffeeSizes; }
+    public ArrayList<String> getCoffeeSizes() { return this.mCoffeeSizes; }
 
-    public ArrayList<String> getProductivityTime() { return mProductivityTime; }
+    public ArrayList<String> getProductivityTime() { return this.mProductivityTime; }
+
+    public int getTotalConsumed() { return this.mTotalConsumed; }
 
     public void setCount (int count) { this.mCount = count; }
 
@@ -84,4 +90,6 @@ public class Coffee
     {
         this.mCoffeeSizes = sizes;
     }
+
+    public void setTotalConsumed (int consumed) { this.mTotalConsumed = consumed; }
 }

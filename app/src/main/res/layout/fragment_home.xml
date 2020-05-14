@@ -103,6 +103,18 @@
                 android:textSize="12sp"
                 />
 
+            <TextView
+                android:id="@+id/outOf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/outOf_consumed"
+                android:layout_alignTop="@id/center"
+                android:layout_marginTop="85dp"
+                android:layout_marginStart="315dp"
+                android:textColor="#8C8C8C"
+                android:textSize="12sp"
+                />
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:progressDrawable="@drawable/customprogressbar"

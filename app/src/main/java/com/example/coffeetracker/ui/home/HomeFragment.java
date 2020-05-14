@@ -92,6 +92,8 @@ public class HomeFragment extends Fragment
 
     private static int progressAmount = 0;
 
+    private TextView outOf;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
@@ -113,6 +115,9 @@ public class HomeFragment extends Fragment
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
         mDateTextView.setText(date.format(formatter));
+
+        outOf = root.findViewById(R.id.outOf);
+        outOf.setText(getString(R.string.outOf_consumed, progressAmount));
 
         coffeeSizePicker = root.findViewById(R.id.coffeeSize);
         initiatePicker();
@@ -166,7 +171,11 @@ public class HomeFragment extends Fragment
                 num++;
                 mCoffeeNumber.setText(String.valueOf(num));
 
-                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList, productivityLevelsTime, productivityLevels);
+                setProgressPlus(selectedCoffeeSize);
+                progressBar.setProgress(progressAmount);
+                outOf.setText(getString(R.string.outOf_consumed, progressAmount));
+
+                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList, productivityLevelsTime, productivityLevels, progressAmount);
                 if (num == 1)
                 {
                     Log.d("TIme: ", additionTime());
@@ -195,6 +204,7 @@ public class HomeFragment extends Fragment
                         retrievedCoffee.setCoffeeSizes(retrievedSizes);
                         retrievedCoffee.setProductivityTime(retrievedProdTimes);
                         retrievedCoffee.setProductivity(retrievedProdLevels);
+                        retrievedCoffee.setTotalConsumed(progressAmount);
 
                         mCoffeeViewModel.insert(retrievedCoffee);
                     }
@@ -202,9 +212,6 @@ public class HomeFragment extends Fragment
 
                     initiateNotification();
                 }
-
-                setProgressPlus(selectedCoffeeSize);
-                progressBar.setProgress(progressAmount);
             }
         });
 
@@ -218,12 +225,17 @@ public class HomeFragment extends Fragment
                 {
                     num--;
                     mCoffeeNumber.setText(Integer.toString(num));
-                    //Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList);
+
+                    setProgressMinus(selectedCoffeeSize);
+                    progressBar.setProgress(progressAmount);
+                    outOf.setText(getString(R.string.outOf_consumed, progressAmount));
+
                     if(retrievedCoffee != null)
                     {
                         retrievedCoffee.getCoffeeSizes().remove(retrievedCoffee.getCoffeeSizes().size()-1);
                         retrievedCoffee.getTimes().remove(retrievedCoffee.getTimes().size()-1);
                         retrievedCoffee.setCount(retrievedCoffee.getCount()-1);
+                        retrievedCoffee.setTotalConsumed(progressAmount);
 
                         //updating current date's entry so graph will be updated dynamically
                         mCoffeeViewModel.insert(retrievedCoffee);
@@ -232,6 +244,7 @@ public class HomeFragment extends Fragment
 
                 setProgressMinus(selectedCoffeeSize);
                 progressBar.setProgress(progressAmount);
+                outOf.setText(getString(R.string.outOf_consumed, progressAmount));
             }
         });
 
@@ -294,6 +307,9 @@ public class HomeFragment extends Fragment
                         retrievedCoffee = coffees.get(i);
                         mCoffeeNumber.setText(Integer.toString(retrievedCoffee.getCount()));
                         num = retrievedCoffee.getCount();
+                        progressAmount = retrievedCoffee.getTotalConsumed();
+                        progressBar.setProgress(progressAmount);
+                        outOf.setText(getString(R.string.outOf_consumed, progressAmount));
                     }
                 }
             }
