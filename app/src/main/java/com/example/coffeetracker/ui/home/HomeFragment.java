@@ -1,6 +1,7 @@
 package com.example.coffeetracker.ui.home;
 
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
@@ -45,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -94,6 +97,8 @@ public class HomeFragment extends Fragment
 
     private TextView outOf;
 
+    private CoffeeDao coffeeDao;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
 
@@ -114,7 +119,7 @@ public class HomeFragment extends Fragment
 
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
-        mDateTextView.setText(date.format(formatter));
+        mDateTextView.setText(currentDate());
 
         outOf = root.findViewById(R.id.outOf);
         outOf.setText(getString(R.string.outOf_consumed, progressAmount));
@@ -154,13 +159,53 @@ public class HomeFragment extends Fragment
         final ArrayList<String> productivityLevelsTime = new ArrayList<>();
 
         //Retrieving the current count for the current day
-        CoffeeDao coffeeDao = CoffeeRoomDatabase.getDatabase(getContext()).coffeeDao();
-        final Coffee coffeeOBJ = coffeeDao.findCoffeeObj(mDateTextView.getText().toString());
-        if(coffeeOBJ != null)
+        coffeeDao = CoffeeRoomDatabase.getDatabase(getContext()).coffeeDao();
+
+        mDateTextView.setOnClickListener(new View.OnClickListener()
         {
-            mCoffeeNumber.setText(Integer.toString(coffeeOBJ.getCount()));
-            num = coffeeOBJ.getCount();
-        }
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+            @Override
+            public void onClick(View view)
+            {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                        new DatePickerDialog.OnDateSetListener()
+                        {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day)
+                            {
+                                LocalDate date = LocalDate.of(year, month, day);
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, MMM dd");
+                                mDateTextView.setText(date.format(formatter));
+
+                                /*Coffee coffeeOBJ = coffeeDao.findCoffeeObj(date.format(formatter));
+
+                                if(coffeeOBJ == null)
+                                {
+                                    num = 0;
+                                    progressAmount = 0;
+                                    progressBar.setProgress(progressAmount);
+                                    mCoffeeNumber.setText(num);
+                                    outOf.setText(getString(R.string.outOf_consumed, progressAmount));
+                                }
+                                else
+                                {
+                                    mCoffeeNumber.setText(Integer.toString(coffeeOBJ.getCount()));
+                                    num = coffeeOBJ.getCount();
+                                    mCoffeeNumber.setText(coffeeOBJ.getCount());
+                                    progressAmount = coffeeOBJ.getTotalConsumed();
+                                    progressBar.setProgress(progressAmount);
+                                    outOf.setText(getString(R.string.outOf_consumed, progressAmount));
+                                }*/
+                            }
+                        }, year, month, dayOfMonth);
+
+                datePickerDialog.show();
+            }
+        });
 
         // bind the views here.
         mPlusButton.setOnClickListener(new View.OnClickListener()
@@ -175,7 +220,7 @@ public class HomeFragment extends Fragment
                 progressBar.setProgress(progressAmount);
                 outOf.setText(getString(R.string.outOf_consumed, progressAmount));
 
-                Coffee coffee = new Coffee(mDateTextView.getText().toString(), num, times, coffeeSizeList, productivityLevelsTime, productivityLevels, progressAmount);
+                Coffee coffee = new Coffee(currentDate(), num, times, coffeeSizeList, productivityLevelsTime, productivityLevels, progressAmount);
                 if (num == 1)
                 {
                     Log.d("TIme: ", additionTime());
@@ -248,7 +293,7 @@ public class HomeFragment extends Fragment
             }
         });
 
-        mCoffeeViewModel.findCoffeeVM(mDateTextView.getText().toString()).observe(getViewLifecycleOwner(), new Observer<Coffee>()
+        mCoffeeViewModel.findCoffeeVM(currentDate()).observe(getViewLifecycleOwner(), new Observer<Coffee>()
         {
             @Override
             public void onChanged(Coffee coffee)

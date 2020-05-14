@@ -110,7 +110,7 @@
                 android:text="@string/outOf_consumed"
                 android:layout_alignTop="@id/center"
                 android:layout_marginTop="85dp"
-                android:layout_marginStart="315dp"
+                android:layout_marginStart="295dp"
                 android:textColor="#8C8C8C"
                 android:textSize="12sp"
                 />
@@ -124,10 +124,9 @@
                 android:layout_below="@+id/coffeeCup"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="24dp"
-                android:max="50"
+                android:max="40"
                 android:min="0"
                 android:minWidth="300dp"
-                android:progress="8"
                 android:layout_marginStart="50dp"
                 android:progressTint="@color/colorPrimary"/>
         </RelativeLayout>
